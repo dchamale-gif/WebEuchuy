@@ -4,31 +4,24 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta name="theme-color" content="#d94f8b" />
-  <meta name="description" content="Eunice Chuy - Creadora de contenido visual y audiovisual que conecta marcas con su audiencia de forma auténtica" />
-  <title>Eunice Chuy | Creadora de Contenido</title>
+  <meta name="description" content="Estrategias de contenido - Próximamente en el blog de Eunice Chuy" />
+  <title>Estrategias de Contenido | Eunice Chuy</title>
   <!-- Fuentes Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles/main.css">
-  <link rel="preload" href="assets/foto-eunice.jpg" as="image">
 </head>
 <body>
-  <!-- Mariposas decorativas -->
-  <div class="butterfly"></div>
-  <div class="butterfly"></div>
-  <div class="butterfly"></div>
-  <div class="butterfly"></div>
-  <div class="butterfly"></div>
-  
   <!-- Header -->
   <header>
     <div class="container nav">
       <div class="brand">Eunice</div>
       <nav class="menu">
-        <a href="#about">Sobre mí</a>
-        <a href="#blog">Blog</a>
-        <a href="#contact">Contacto</a>
+        <a href="index.html">Inicio</a>
+        <a href="index.html#about">Sobre mí</a>
+        <a href="index.html#blog">Blog</a>
+        <a href="index.html#contact">Contacto</a>
         <button class="btn mobile-menu-toggle" type="button" aria-label="Menú">
           <span></span>
           <span></span>
@@ -39,70 +32,39 @@
   </header>
 
   <!-- Main -->
-  <main>
-    <div class="container grid">
-      <section id="about">
-        <h1>Eunice Chuy</h1>
-        <p class="subtitle">Creadora de Contenido</p>
-        <p class="lead">Estoy apasionada por ayudar a marcas a conectar autenticamente con su audiencia. Creo contenido visual y audiovisual que refleja la esencia de cada marca y genera engagement real.</p>
-        <p class="lead">Mi enfoque combina creatividad, autenticidad y tendencias digitales para que cada publicacion impacte y conecte.</p>
-
-        <div class="blog-section" id="blog">
-          <h2>Blog</h2>
-          <p class="blog-description">Comparto tips, tendencias y secretos del mundo del contenido digital</p>
+  <main class="coming-soon-page">
+    <div class="container">
+      <div class="coming-soon-content">
+        <div class="coming-soon-icon">📝</div>
+        <h1>Estrategias de Contenido</h1>
+        <p class="coming-soon-subtitle">Descubre cómo crear contenido que conecte</p>
+        
+        <div class="coming-soon-message">
+          <h2>¡Próximamente!</h2>
+          <p>Estoy preparando contenido increíble sobre estrategias de contenido que realmente funcionan. Aquí encontrarás tips, técnicas y secretos para crear publicaciones que generen engagement real y conecten con tu audiencia.</p>
           
-          <div class="blog-cards">
-            <a href="estrategias-contenido.html" class="blog-card">
-              <div class="blog-icon">📝</div>
-              <h3>Estrategias de Contenido</h3>
-              <p>Descubre cómo crear contenido que conecte</p>
-            </a>
-            
-            <a href="fotografia-creativa.html" class="blog-card">
-              <div class="blog-icon">📸</div>
-              <h3>Fotografía Creativa</h3>
-              <p>Tips para capturar momentos únicos</p>
-            </a>
-            
-            <a href="video-marketing.html" class="blog-card">
-              <div class="blog-icon">🎬</div>
-              <h3>Video Marketing</h3>
-              <p>Tendencias en contenido audiovisual</p>
-            </a>
+          <div class="features-preview">
+            <div class="feature">
+              <span class="feature-icon">🎯</span>
+              <span>Definición de audiencia objetivo</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon">💡</span>
+              <span>Ideas de contenido viral</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon">📊</span>
+              <span>Análisis de métricas importantes</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon">⏰</span>
+              <span>Calendarios de publicación</span>
+            </div>
           </div>
           
-          <div class="blog-cta">
-            <p class="coming-soon">¡Próximamente más contenido!</p>
-          </div>
+          <a href="index.html" class="btn back-btn">Volver al inicio</a>
         </div>
-
-        <form action="#" method="post" id="contact">
-          <h2>Trabajemos juntos</h2>
-          <div class="field">
-            <label for="nombre">Nombre *</label>
-            <input id="nombre" name="nombre" type="text" placeholder="Tu nombre" required />
-          </div>
-          <div class="field">
-            <label for="apellido">Apellido</label>
-            <input id="apellido" name="apellido" type="text" placeholder="Tu apellido" />
-          </div>
-          <div class="field">
-            <label for="email">Correo electrónico *</label>
-            <input id="email" name="email" type="email" placeholder="tu@email.com" required />
-          </div>
-          <div class="field">
-            <label for="mensaje">Tu mensaje *</label>
-            <textarea id="mensaje" name="mensaje" placeholder="Cuéntame sobre tu proyecto..." required></textarea>
-          </div>
-          <div class="actions">
-            <button class="btn" type="submit">Enviar mensaje</button>
-          </div>
-        </form>
-      </section>
-
-      <aside class="photo-card">
-        <img src="assets/foto-eunice.jpg" alt="Retrato profesional de Eunice Chuy" loading="lazy" />
-      </aside>
+      </div>
     </div>
   </main>
 
@@ -127,15 +89,15 @@
       <div class="foot-nav">
         <div class="foot-col">
           <h4>Sobre mí</h4>
-          <a href="#">Portfolio</a>
-          <a href="#">Servicios</a>
-          <a href="#">Experiencia</a>
+          <a href="index.html#about">Portfolio</a>
+          <a href="index.html#about">Servicios</a>
+          <a href="index.html#about">Experiencia</a>
         </div>
         <div class="foot-col">
           <h4>Contacto</h4>
           <a href="mailto:contacto@eunicechuy.com">Email</a>
           <a href="tel:+502XXXXXXXX">Teléfono</a>
-          <a href="#">Ubicación</a>
+          <a href="index.html#contact">Ubicación</a>
         </div>
       </div>
     </div>
