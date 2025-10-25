@@ -429,3 +429,156 @@ footer {
     padding: 0;
   }
 }
+/* Layout del grid principal: texto + foto */
+.container.grid {
+  display: grid;
+  grid-template-columns: 1fr auto; /* el texto ocupa, la foto usa su ancho */
+  gap: 28px 48px;
+  align-items: start;
+}
+
+/* Tarjeta de foto: ancho controlado */
+.photo-card {
+  width: clamp(260px, 34vw, 420px); /* límite mínimo, relativo y máximo */
+  justify-self: end;
+  align-self: start;
+}
+
+/* Imagen: nunca pantalla completa */
+.photo-card img {
+  display: block;
+  width: 100%;      /* llena solo el ancho de .photo-card */
+  height: auto;     /* mantiene proporción */
+  max-height: 520px;/* evita que se haga muy alta */
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+}
+
+/* Contenedor general (por si hace falta limitar ancho) */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Responsive: en móvil la foto baja y mantiene tamaño razonable */
+@media (max-width: 900px) {
+  .container.grid {
+    grid-template-columns: 1fr;
+  }
+  .photo-card {
+    width: min(92%, 420px);
+    justify-self: center;
+    margin-top: 8px;
+  }
+}
+
+/* Fix: foto más pequeña y sin fondo blanco */
+.photo-card{
+  width: clamp(260px, 32vw, 420px);
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
+  background: transparent;   /* quitar fondo blanco */
+  border: 0;
+  box-shadow: none;
+  border-radius: 16px;
+  justify-self: end;
+  align-self: start;
+}
+
+.photo-card img{
+  display: block;
+  width: 100%;
+  height: auto;              /* no ocupar toda la pantalla */
+  max-height: 520px;         /* tope de altura */
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+/* Grid y responsive */
+.container.grid{ grid-template-columns: 1.05fr 0.95fr; }
+@media (max-width: 900px){
+  .container.grid{ grid-template-columns: 1fr; }
+  .photo-card{ width: min(92%, 420px); justify-self: center; }
+}
+
+/* Foto: tamaño controlado y sin fondo */
+.container.grid .photo-card{
+  width: clamp(260px, 34vw, 420px) !important;
+  max-width: 100%;
+  padding: 0 !important;
+  margin: 0;
+  background: transparent !important;   /* quita fondo blanco */
+  border: 0 !important;
+  box-shadow: none !important;
+  height: auto !important;              /* evita ocupar toda la pantalla */
+  min-height: 0 !important;
+  justify-self: end;
+  align-self: start;
+  border-radius: 16px;
+}
+.container.grid .photo-card img{
+  display: block;
+  width: 100%;
+  height: auto !important;
+  max-height: 520px;                    /* tope de altura */
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+/* Blog full-bleed (de borde a borde) */
+.blog-section{
+  position: relative;
+  left: 50%;
+  right: 50%;
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: -50vw;   /* rompe el contenedor para ocupar todo el viewport */
+  margin-right: -50vw;
+  border-radius: 0;
+  padding: 32px 24px;
+}
+@media (max-width: 900px){
+  .container.grid{ grid-template-columns: 1fr; }
+  .container.grid .photo-card{ width: min(92%, 420px); justify-self: center; }
+  .blog-section{ padding-left: 16px; padding-right: 16px; }
+}
+
+/* Foto más pequeña y sin fondo */
+.container.grid .photo-card{
+  width: clamp(260px, 30vw, 420px) !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  height: auto !important;        /* evita altura forzada */
+  min-height: 0 !important;
+  justify-self: end;
+  border-radius: 16px;
+}
+.container.grid .photo-card img{
+  width: 100%;
+  height: auto !important;        /* no ocupa toda la pantalla */
+  max-height: 520px;              /* tope de altura */
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+/* BLOG FULL-BLEED (de borde a borde del viewport) */
+.grid > section > .blog-section,
+.blog-section{
+  grid-column: 1 / -1;                     /* por si está dentro del grid */
+  width: 100vw !important;                 /* ocupa todo el viewport */
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  border-radius: 0 !important;             /* sin esquinas para full-bleed */
+  max-width: none !important;
+  padding: 32px clamp(16px, 6vw, 48px) !important;
+}
+
+@media (max-width: 900px){
+  .container.grid{ grid-template-columns: 1fr; }
+  .container.grid .photo-card{ width: min(92%, 420px) !important; justify-self: center; }
+}
