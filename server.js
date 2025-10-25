@@ -24,7 +24,7 @@ app.get('/butterflies', (req, res) => {
 });
 
 // Cargar index.html en cualquier ruta que no sea API
-app.get('*', (_req, res) => {
+app.get('/*', (_req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
