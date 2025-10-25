@@ -1,0 +1,431 @@
+:root{
+    --bg:#ffffff;
+    --text:#0f172a;
+    --muted:#6b7280;
+    --brand:#0ea5b7;
+    --border:#e5e7eb;
+    --btn:#0b0b0b;
+}
+*{box-sizing:border-box}
+
+/* Mariposas animadas */
+@keyframes flutter {
+    0%, 100% { transform: translate(0, 0) rotate(0deg) scaleX(1); }
+    25% { transform: translate(100px, -50px) rotate(15deg) scaleX(0.8); }
+    50% { transform: translate(200px, 0) rotate(0deg) scaleX(1); }
+    75% { transform: translate(100px, 50px) rotate(-15deg) scaleX(0.8); }
+}
+
+@keyframes wingFlap {
+    0%, 100% { transform: scaleX(1); }
+    50% { transform: scaleX(0.5); }
+}
+
+
+.butterfly {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23faebd7' d='M50 50 L30 20 C20 10 10 15 15 30 C20 45 35 45 50 50 L50 50 L70 20 C80 10 90 15 85 30 C80 45 65 45 50 50 M50 50 L30 80 C20 90 10 85 15 70 C20 55 35 55 50 50 L50 50 L70 80 C80 90 90 85 85 70 C80 55 65 55 50 50'/%3E%3Cpath fill='%23e5dcc5' d='M48 48 L52 52 M48 52 L52 48'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    z-index: 0;
+    filter: drop-shadow(2px 2px 4px rgba(250,235,215,0.2));
+    opacity: 0.7;
+}
+
+.butterfly:nth-child(1) { top: 100px; left: 10%; animation: butterfly1 20s ease-in-out infinite; }
+.butterfly:nth-child(2) { top: 200px; left: 80%; animation: butterfly2 18s ease-in-out infinite 2s; }
+.butterfly:nth-child(3) { top: 300px; left: 30%; animation: butterfly3 22s ease-in-out infinite 1s; }
+.butterfly:nth-child(4) { top: 400px; left: 70%; animation: butterfly4 19s ease-in-out infinite 3s; }
+.butterfly:nth-child(5) { top: 250px; left: 50%; animation: butterfly5 21s ease-in-out infinite 4s; }
+
+@keyframes butterfly1 {
+    0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    33% { transform: translate(200px, -100px) rotate(20deg) scale(1.1); }
+    66% { transform: translate(400px, 50px) rotate(-10deg) scale(0.9); }
+    100% { transform: translate(600px, 0) rotate(0deg) scale(1); }
+}
+
+@keyframes butterfly2 {
+    0% { transform: translate(0, 0) rotate(0deg) scale(0.9); }
+    33% { transform: translate(-200px, -80px) rotate(-15deg) scale(1.1); }
+    66% { transform: translate(-400px, 40px) rotate(10deg) scale(1); }
+    100% { transform: translate(-600px, -20px) rotate(-5deg) scale(0.95); }
+}
+
+@keyframes butterfly3 {
+    0% { transform: translate(0, 0) rotate(10deg) scale(1); }
+    33% { transform: translate(300px, -120px) rotate(30deg) scale(1.1); }
+    66% { transform: translate(500px, 60px) rotate(0deg) scale(0.95); }
+    100% { transform: translate(700px, -30px) rotate(20deg) scale(1.05); }
+}
+
+@keyframes butterfly4 {
+    0% { transform: translate(0, 0) rotate(-10deg) scale(1.1); }
+    33% { transform: translate(-250px, -90px) rotate(-25deg) scale(1); }
+    66% { transform: translate(-450px, 30px) rotate(5deg) scale(0.9); }
+    100% { transform: translate(-650px, -40px) rotate(-15deg) scale(1.05); }
+}
+
+@keyframes butterfly5 {
+    0% { transform: translate(0, 0) rotate(5deg) scale(1); }
+    33% { transform: translate(150px, -150px) rotate(25deg) scale(1.1); }
+    66% { transform: translate(-150px, 100px) rotate(-15deg) scale(0.95); }
+    100% { transform: translate(150px, -100px) rotate(15deg) scale(1.05); }
+}
+
+/* Hacer que las mariposas se repitan continuamente */
+.butterfly {
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reiniciar la posición cuando termine la animación */
+.butterfly:nth-child(1), 
+.butterfly:nth-child(3) {
+    animation-direction: alternate-reverse;
+}
+
+.butterfly:nth-child(2),
+.butterfly:nth-child(4) {
+    animation-direction: alternate;
+}
+
+.butterfly:hover {
+    animation-play-state: paused;
+}
+
+body{
+    margin: 0;
+    font-family: system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+    color: var(--text);
+    background: linear-gradient(135deg, #ffd1dc 0%, #ffe6ea 50%, #ffd1dc 100%);
+    line-height: 1.5;
+    min-height: 100vh;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.container{max-width:1120px;margin:0 auto;padding:20px}
+
+/* Elimina centrado global y restaura grid principal */
+.main-centered, .profile-section, .form-section {
+  all: unset;
+}
+
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.blog-section {
+  width: 100%;
+  background: rgba(255,255,255,0.7);
+  border-radius: 12px;
+  margin: 40px auto 0 auto;
+  padding: 24px 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  text-align: center;
+  max-width: 700px;
+}
+
+.blog-section h2 {
+  color: #d94f8b;
+  margin-bottom: 12px;
+  font-size: 2em;
+}
+
+.blog-placeholder {
+  color: #8b4362;
+  font-size: 1.1em;
+  opacity: 0.7;
+}
+
+.form-section {
+  width: 100%;
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-section form {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Header */
+header{border-bottom:1px solid var(--border);background:#fff;position:sticky;top:0;z-index:10}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font-weight:700}
+.menu{display:flex;gap:20px;align-items:center}
+.menu a{font-size:14px;color:#111827}
+.btn{background:var(--btn);color:#fff;border:none;padding:10px 16px;border-radius:8px;cursor:pointer}
+
+/* Main */
+main{padding:32px 0}
+.grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:32px}
+h1 {
+    font-size: 72px;
+    line-height: 1.1;
+    margin: 0 0 10px;
+    color: #d94f8b;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    text-align: center;
+}
+
+h1::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 4px;
+    background: #d94f8b;
+    margin: 15px auto;
+    border-radius: 2px;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.subtitle {
+    margin: 0 0 30px;
+    color: #8b4362;
+    font-weight: 700;
+    font-size: 2em;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+}
+.lead{
+    color:#555;
+    background: rgba(255,255,255,0.6);
+    padding: 15px;
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+}
+.lead + .lead{margin-top:14px}
+
+/* Form */
+form{
+    margin-top:28px;
+    border:1px solid rgba(255,255,255,0.3);
+    border-radius:12px;
+    padding:20px;
+    background:rgba(255,255,255,0.8);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+form h2{
+    margin:0 0 12px;
+    font-size:20px;
+    color:#d94f8b;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+.field{display:flex;flex-direction:column;margin-bottom:12px}
+label{font-size:12px;color:var(--muted);margin-bottom:6px}
+input, textarea{width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font:inherit}
+textarea{min-height:110px;resize:vertical}
+.actions{margin-top:8px}
+.actions .btn{width:100%}
+
+/* Photo card */
+.photo-card{align-self:start;background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px}
+.photo-card img{border-radius:8px}
+
+/* Footer */
+footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 0;
+    margin-top: 60px;
+    background: rgba(255,255,255,0.9);
+}
+
+.foot-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 30px;
+}
+
+.social-section {
+    margin-bottom: 30px;
+}
+
+.social-title {
+    font-size: 24px;
+    color: #d94f8b;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.social {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.social a {
+    height: 50px;
+    width: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background: #d94f8b;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    font-size: 24px;
+}
+
+.social a:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(217, 79, 139, 0.4);
+    background: #c73873;
+}
+
+.foot-nav {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 20px;
+}
+
+.foot-col {
+    text-align: center;
+}
+
+.foot-col h4 {
+    margin: 0 0 12px;
+    font-size: 16px;
+    color: #8b4362;
+}
+
+.foot-col a {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    padding: 6px 0;
+    transition: color 0.3s ease;
+}
+
+.foot-col a:hover {
+    color: #d94f8b;
+}
+
+/* Corrección: la foto debe tener altura automática y no forzada */
+.photo-card {
+  max-width: 100%;
+  height: auto;
+  min-height: unset;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  background: #fff;
+}
+
+.photo-card img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* Estandarizar altura de la imagen y blog */
+.photo-card {
+  max-width: 100%;
+  height: 100%;
+  min-height: 340px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  background: #fff;
+}
+
+.photo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.grid > section {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.grid > section > .blog-section {
+  width: 100%;
+  margin: 0;
+  padding: 32px 24px;
+  box-sizing: border-box;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  text-align: center;
+  max-width: 100%;
+  min-height: 180px;
+  display: block;
+}
+
+/* Blog ocupa toda la columna principal del grid */
+.grid > section > .blog-section {
+  width: 100%;
+  margin: 32px 0 0 0;
+  padding: 32px 24px;
+  box-sizing: border-box;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  text-align: center;
+  max-width: 100%;
+  display: block;
+}
+
+.grid > section > .blog-section h2 {
+  color: #d94f8b;
+  margin-bottom: 16px;
+  font-size: 2.2em;
+  font-weight: 700;
+}
+
+.grid > section > .blog-section .blog-placeholder {
+  color: #8b4362;
+  font-size: 1.3em;
+  opacity: 0.7;
+}
+
+/* Responsive */
+@media (max-width: 900px){
+    .grid{grid-template-columns:1fr;gap:20px}
+    header .menu a{display:none}
+    /* Centrado y estructura principal */
+.main-centered {
+  max-width: 98vw;
+  padding: 0 2vw;
+}
+
+.profile-section, .blog-section, .form-section {
+    padding: 0;
+  }
+}
