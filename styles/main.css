@@ -816,15 +816,15 @@ footer {
     }
     
     .carousel-container {
-        height: 450px; /* Altura fija más alta para móviles */
+        height: 550px; /* Altura aún más alta para móviles */
     }
     
     .carousel-track {
-        height: 450px;
+        height: 550px;
     }
     
     .carousel-slide img {
-        height: 450px; /* Altura más alta para móviles */
+        height: 550px; /* Altura mucho más alta para móviles */
         object-position: center top; /* CLAVE: Desde arriba en móviles también */
     }
     
@@ -1300,5 +1300,42 @@ em, i {
     
     .coming-soon-icon {
         font-size: 3rem;
+    }
+}
+
+/* Móviles muy pequeños - ajuste específico del carrusel */
+@media (max-width: 480px) {
+    .carousel-container {
+        height: 500px !important; /* Altura específica para pantallas pequeñas */
+    }
+    
+    .carousel-track {
+        height: 500px !important;
+    }
+    
+    .carousel-slide img {
+        height: 500px !important;
+        object-position: center 10% !important; /* Ajuste fino: mostrar desde muy arriba */
+    }
+    
+    .carousel-indicators {
+        bottom: 10px; /* Indicadores más cerca del borde */
+        padding: 4px 8px;
+    }
+}
+
+/* Pantallas muy anchas en móvil (landscape) */
+@media (max-width: 768px) and (orientation: landscape) {
+    .carousel-container {
+        height: 350px !important; /* Altura reducida para landscape */
+    }
+    
+    .carousel-track {
+        height: 350px !important;
+    }
+    
+    .carousel-slide img {
+        height: 350px !important;
+        object-position: center top !important;
     }
 }

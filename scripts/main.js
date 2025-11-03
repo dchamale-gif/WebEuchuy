@@ -212,12 +212,17 @@ document.addEventListener('DOMContentLoaded', function() {
             startAutoSlide();
         }, 3000); // 3 segundos para ver bien la primera imagen
 
-        // Verificar que las imágenes se carguen
+        // Verificar que las imágenes se carguen y aplicar estilos específicos
         slides.forEach((slide, index) => {
             const img = slide.querySelector('img');
             if (img) {
                 img.addEventListener('load', () => {
                     console.log(`Imagen ${index + 1} cargada correctamente`);
+                    // Asegurar que la imagen tenga los estilos correctos
+                    img.style.objectFit = 'cover';
+                    img.style.objectPosition = 'center top';
+                    img.style.width = '100%';
+                    img.style.height = '100%';
                 });
                 img.addEventListener('error', (e) => {
                     console.log(`Error cargando imagen ${index + 1}:`, e);
