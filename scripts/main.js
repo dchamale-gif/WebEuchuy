@@ -1,3 +1,18 @@
+// Pantalla de carga
+window.addEventListener('load', function() {
+    const loader = document.getElementById('loader');
+    if (loader) {
+        // Simular tiempo de carga (mínimo 1.5 segundos)
+        setTimeout(() => {
+            loader.classList.add('hidden');
+            // Remover el elemento del DOM después de la animación
+            setTimeout(() => {
+                loader.remove();
+            }, 500);
+        }, 1500);
+    }
+});
+
 // Función para manejar el envío del formulario
 document.addEventListener('DOMContentLoaded', function() {
     // Formulario
@@ -113,4 +128,94 @@ document.addEventListener('DOMContentLoaded', function() {
             loadButterflies();
         }
     });
+
+    // Carrusel de imágenes - versión simplificada
+    function initCarousel() {
+        const slides = document.querySelectorAll('.carousel-slide');
+        const indicators = document.querySelectorAll('.indicator');
+        let currentSlide = 0;
+        let carouselInterval;
+
+        console.log('Inicializando carrusel. Slides encontradas:', slides.length);
+
+        if (slides.length === 0) {
+            console.log('No se encontraron slides del carrusel');
+            return;
+        }
+
+        // Asegurar que la primera imagen sea visible
+        slides[0].classList.add('active');
+        if (indicators.length > 0) {
+            indicators[0].classList.add('active');
+        }
+
+        function showSlide(index) {
+            console.log('Mostrando slide:', index);
+            // Remover clase active de todas las slides
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                if (indicators[i]) indicators[i].classList.remove('active');
+            });
+            
+            // Agregar clase active a la slide actual
+            slides[index].classList.add('active');
+            if (indicators[index]) {
+                indicators[index].classList.add('active');
+            }
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        function startAutoSlide() {
+            carouselInterval = setInterval(nextSlide, 4000);
+            console.log('Auto-slide iniciado');
+        }
+
+        function stopAutoSlide() {
+            clearInterval(carouselInterval);
+            console.log('Auto-slide pausado');
+        }
+
+        // Inicializar indicadores clicables
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                console.log('Click en indicador:', index);
+                currentSlide = index;
+                showSlide(currentSlide);
+                stopAutoSlide();
+                setTimeout(startAutoSlide, 100); // Reiniciar el auto-play
+            });
+        });
+
+        // Pausar en hover
+        const carouselContainer = document.querySelector('.carousel-container');
+        if (carouselContainer) {
+            carouselContainer.addEventListener('mouseenter', stopAutoSlide);
+            carouselContainer.addEventListener('mouseleave', startAutoSlide);
+        }
+
+        // Iniciar el carrusel después de un breve delay
+        setTimeout(() => {
+            startAutoSlide();
+        }, 2000);
+
+        // Verificar que las imágenes se carguen
+        slides.forEach((slide, index) => {
+            const img = slide.querySelector('img');
+            if (img) {
+                img.addEventListener('load', () => {
+                    console.log(`Imagen ${index + 1} cargada correctamente`);
+                });
+                img.addEventListener('error', (e) => {
+                    console.log(`Error cargando imagen ${index + 1}:`, e);
+                });
+            }
+        });
+    }
+
+    // Inicializar carrusel cuando el DOM esté listo
+    setTimeout(initCarousel, 100);
 });

@@ -3,9 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <meta name="theme-color" content="#d94f8b" />
+  <meta name="theme-color" content="#70BFCD" />
   <meta name="description" content="Eunice Chuy - Creadora de contenido visual y audiovisual que conecta marcas con su audiencia de forma auténtica" />
   <title>Eunice Chuy | Creadora de Contenido</title>
+  
+  <!-- Favicon E azul -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzcwQkZDRCIvPgo8cGF0aCBkPSJNOSA4SDE5VjEwSDExVjE0SDE4VjE2SDExVjIwSDE5VjIySDlWOFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=">
+  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzcwQkZDRCIvPgo8cGF0aCBkPSJNOSA4SDE5VjEwSDExVjE0SDE4VjE2SDExVjIwSDE5VjIySDlWOFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=">
   <!-- Fuentes Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,6 +18,14 @@
   <link rel="preload" href="assets/foto-eunice.jpg" as="image">
 </head>
 <body>
+  <!-- Pantalla de carga -->
+  <div class="loader-overlay" id="loader">
+    <div class="loader-content">
+      <div class="loader-letter">E</div>
+      <div class="loader-text">Cargando...</div>
+    </div>
+  </div>
+
   <!-- Mariposas decorativas -->
   <div class="butterfly"></div>
   <div class="butterfly"></div>
@@ -100,8 +112,31 @@
         </form>
       </section>
 
-      <aside class="photo-card">
-        <img src="assets/foto-eunice.jpg" alt="Retrato profesional de Eunice Chuy" loading="lazy" />
+      <aside class="photo-carousel">
+        <div class="carousel-container">
+          <div class="carousel-track">
+            <div class="carousel-slide active">
+              <img src="assets/IMG_8498.JPG" alt="Eunice Chuy - Contenido creativo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjZjBmMGYwIi8+Cjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNzBCRkNEIiBmb250LXNpemU9IjE4Ij5JbWFnZW4gMTwvdGV4dD4KPC9zdmc+';" />
+            </div>
+            <div class="carousel-slide">
+              <img src="assets/IMG_8499.JPG" alt="Eunice Chuy - Sesión fotográfica" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjZjBmMGYwIi8+Cjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNzBCRkNEIiBmb250LXNpemU9IjE4Ij5JbWFnZW4gMjwvdGV4dD4KPC9zdmc+';" />
+            </div>
+            <div class="carousel-slide">
+              <img src="assets/IMG_8500.JPG" alt="Eunice Chuy - Trabajo profesional" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjZjBmMGYwIi8+Cjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNzBCRkNEIiBmb250LXNpemU9IjE4Ij5JbWFnZW4gMzwvdGV4dD4KPC9zdmc+';" />
+            </div>
+            <div class="carousel-slide">
+              <img src="assets/IMG_8501.JPG" alt="Eunice Chuy - Portfolio visual" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjZjBmMGYwIi8+Cjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNzBCRkNEIiBmb250LXNpemU9IjE4Ij5JbWFnZW4gNDwvdGV4dD4KPC9zdmc+';" />
+            </div>
+          </div>
+          
+          <!-- Indicadores del carrusel -->
+          <div class="carousel-indicators">
+            <button class="indicator active" data-slide="0" aria-label="Ver imagen 1"></button>
+            <button class="indicator" data-slide="1" aria-label="Ver imagen 2"></button>
+            <button class="indicator" data-slide="2" aria-label="Ver imagen 3"></button>
+            <button class="indicator" data-slide="3" aria-label="Ver imagen 4"></button>
+          </div>
+        </div>
       </aside>
     </div>
   </main>
