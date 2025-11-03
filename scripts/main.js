@@ -151,17 +151,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function showSlide(index) {
             console.log('Mostrando slide:', index);
-            // Remover clase active de todas las slides
-            slides.forEach((slide, i) => {
-                slide.classList.remove('active');
-                if (indicators[i]) indicators[i].classList.remove('active');
-            });
             
-            // Agregar clase active a la slide actual
-            slides[index].classList.add('active');
-            if (indicators[index]) {
-                indicators[index].classList.add('active');
-            }
+            // Primero, preparar la siguiente slide
+            slides[index].style.zIndex = '3';
+            
+            // Después de un pequeño delay, hacer la transición
+            setTimeout(() => {
+                // Remover clase active de todas las slides
+                slides.forEach((slide, i) => {
+                    slide.classList.remove('active');
+                    if (indicators[i]) indicators[i].classList.remove('active');
+                    if (i !== index) {
+                        slide.style.zIndex = '1';
+                    }
+                });
+                
+                // Agregar clase active a la slide actual
+                slides[index].classList.add('active');
+                if (indicators[index]) {
+                    indicators[index].classList.add('active');
+                }
+            }, 50);
         }
 
         function nextSlide() {
@@ -170,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function startAutoSlide() {
-            carouselInterval = setInterval(nextSlide, 4000);
+            carouselInterval = setInterval(nextSlide, 6000); // Aumentado a 6 segundos
             console.log('Auto-slide iniciado');
         }
 
@@ -197,10 +207,10 @@ document.addEventListener('DOMContentLoaded', function() {
             carouselContainer.addEventListener('mouseleave', startAutoSlide);
         }
 
-        // Iniciar el carrusel después de un breve delay
+        // Iniciar el carrusel después de un delay más largo para apreciar la primera imagen
         setTimeout(() => {
             startAutoSlide();
-        }, 2000);
+        }, 3000); // 3 segundos para ver bien la primera imagen
 
         // Verificar que las imágenes se carguen
         slides.forEach((slide, index) => {

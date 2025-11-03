@@ -565,17 +565,18 @@ textarea{
 .carousel-container {
     position: relative;
     width: 100%;
-    height: 520px;
+    height: 600px; /* Altura fija más alta */
     overflow: hidden;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     background: #f8f9fa; /* Color de fondo para depuración */
+    animation: fadeInScale 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .carousel-track {
     position: relative;
     width: 100%;
-    height: 520px; /* Altura fija para evitar problemas */
+    height: 600px; /* Altura fija igual al contenedor */
     display: block;
 }
 
@@ -586,7 +587,8 @@ textarea{
     width: 100%;
     height: 100%;
     opacity: 0;
-    transition: opacity 1.2s ease-in-out;
+    transform: scale(1.05);
+    transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1;
     display: flex;
     align-items: center;
@@ -595,19 +597,22 @@ textarea{
 
 .carousel-slide.active {
     opacity: 1;
+    transform: scale(1);
     z-index: 2;
 }
 
 .carousel-slide:first-child {
     opacity: 1;
+    transform: scale(1);
     z-index: 2;
 }
 
 .carousel-slide img {
     display: block;
     width: 100%;
-    height: 520px;
-    object-fit: cover;
+    height: 600px; /* Altura fija más alta */
+    object-fit: cover; /* Llenar el espacio */
+    object-position: center top; /* CLAVE: Mostrar desde arriba, cortar desde abajo */
     border-radius: var(--border-radius);
     background-color: #f0f0f0; /* Color de fondo temporal mientras carga */
 }
@@ -634,13 +639,14 @@ textarea{
     border: 2px solid rgba(255, 255, 255, 0.6);
     background: transparent;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
 }
 
 .indicator:hover {
     border-color: rgba(255, 255, 255, 0.9);
-    transform: scale(1.1);
+    transform: scale(1.2);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
 }
 
 .indicator.active {
@@ -810,15 +816,16 @@ footer {
     }
     
     .carousel-container {
-        height: 300px; /* Altura reducida para móviles */
+        height: 450px; /* Altura fija más alta para móviles */
     }
     
     .carousel-track {
-        height: 300px;
+        height: 450px;
     }
     
     .carousel-slide img {
-        height: 300px;
+        height: 450px; /* Altura más alta para móviles */
+        object-position: center top; /* CLAVE: Desde arriba en móviles también */
     }
     
     .carousel-indicators {
@@ -1091,6 +1098,40 @@ em, i {
     }
     50% {
         transform: translateY(-10px);
+    }
+}
+
+/* Animaciones del carrusel */
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: scale(1.1) translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes slideOut {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.95) translateY(-20px);
     }
 }
 
