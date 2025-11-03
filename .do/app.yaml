@@ -1,0 +1,26 @@
+name: webeu-eunice
+services:
+- name: web
+  source_dir: /
+  github:
+    repo: dchamale-gif/WebEuchuy
+    branch: main
+  run_command: echo "Static site deployment"
+  environment_slug: html
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  routes:
+  - path: /
+  static_sites:
+  - name: eunice-site
+    source_dir: /
+    github:
+      repo: dchamale-gif/WebEuchuy
+      branch: main
+    build_command: echo "No build needed for static HTML"
+    output_dir: /
+    index_document: index.html
+    error_document: index.html
+    environment_slug: html
+    routes:
+    - path: /
