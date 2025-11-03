@@ -8,8 +8,23 @@ const PORT = process.env.PORT || 5003;
 
 app.use(cors());
 
-// Servir archivos estáticos de tu landing
-app.use(express.static(path.join(__dirname)));
+// Desactivar caché para todos los archivos
+app.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
+  next();
+});
+
+// Servir archivos estáticos de tu landing SIN caché
+app.use(express.static(path.join(__dirname), {
+  maxAge: 0,
+  etag: false,
+  lastModified: false,
+  setHeaders: (res, path) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  }
+}));
 
 // Endpoint de mariposas
 app.get('/butterflies', (req, res) => {
