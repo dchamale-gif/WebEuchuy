@@ -231,6 +231,84 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Función para forzar estilos correctos en producción
+    function forceProductionStyles() {
+        console.log('🚀 Aplicando estilos forzados para producción');
+        
+        const container = document.querySelector('.carousel-container');
+        const slides = document.querySelectorAll('.carousel-slide');
+        const images = document.querySelectorAll('.carousel-slide img');
+        
+        if (container) {
+            // Detectar si es móvil
+            const isMobile = window.innerWidth <= 768;
+            const isSmallMobile = window.innerWidth <= 480;
+            
+            // Forzar altura del contenedor
+            if (isSmallMobile) {
+                container.style.height = '500px';
+                container.style.minHeight = '500px';
+                console.log('📱 Aplicando estilos para móvil pequeño: 500px');
+            } else if (isMobile) {
+                container.style.height = '550px';
+                container.style.minHeight = '550px';
+                console.log('📱 Aplicando estilos para móvil: 550px');
+            } else {
+                container.style.height = '600px';
+                container.style.minHeight = '600px';
+                console.log('💻 Aplicando estilos para desktop: 600px');
+            }
+        }
+        
+        // Forzar estilos en todas las imágenes
+        images.forEach((img, index) => {
+            if (isSmallMobile) {
+                img.style.height = '500px';
+                img.style.objectPosition = 'center 10%';
+            } else if (isMobile) {
+                img.style.height = '550px';
+                img.style.objectPosition = 'center top';
+            } else {
+                img.style.height = '600px';
+                img.style.objectPosition = 'center top';
+            }
+            
+            img.style.objectFit = 'cover';
+            img.style.width = '100%';
+            img.style.display = 'block';
+            
+            console.log(`🖼️ Estilos aplicados a imagen ${index + 1}: height=${img.style.height}, position=${img.style.objectPosition}`);
+        });
+    }
+
+    // Aplicar estilos forzados múltiples veces para asegurar que funcionen
+    function applyForceStylesMultipleTimes() {
+        // Inmediatamente
+        forceProductionStyles();
+        
+        // Después de 500ms
+        setTimeout(forceProductionStyles, 500);
+        
+        // Después de 1 segundo
+        setTimeout(forceProductionStyles, 1000);
+        
+        // Después de 2 segundos
+        setTimeout(forceProductionStyles, 2000);
+        
+        // Al cambiar tamaño de ventana
+        window.addEventListener('resize', () => {
+            setTimeout(forceProductionStyles, 100);
+        });
+        
+        // Al cargar todas las imágenes
+        window.addEventListener('load', () => {
+            setTimeout(forceProductionStyles, 500);
+        });
+    }
+
     // Inicializar carrusel cuando el DOM esté listo
     setTimeout(initCarousel, 100);
+    
+    // Aplicar estilos forzados
+    setTimeout(applyForceStylesMultipleTimes, 200);
 });
