@@ -281,16 +281,38 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 💣 FUNCIÓN NUCLEAR: Para cuando la frustración llegue al límite
+    // 💣 FUNCIÓN NUCLEAR: Para cuando las imágenes tienen vida propia
     function nuclearSolution() {
         const images = document.querySelectorAll('.carousel-slide img');
-        images.forEach(img => {
-            img.style.setProperty('height', '700px', 'important');
-            img.style.setProperty('object-fit', 'cover', 'important');
-            img.style.setProperty('object-position', 'center 3%', 'important');
-            img.style.setProperty('width', '100%', 'important');
+        const containers = document.querySelectorAll('.carousel-container, .carousel-track');
+        
+        // Dominar completamente los contenedores
+        containers.forEach(container => {
+            container.style.setProperty('height', '800px', 'important');
+            container.style.setProperty('min-height', '800px', 'important');
+            container.style.setProperty('max-height', 'none', 'important');
         });
-        console.log('💣 SOLUCIÓN NUCLEAR APLICADA: 700px forzado con !important');
+        
+        // Someter a las imágenes rebeldes
+        images.forEach((img, index) => {
+            // FUERZA BRUTA TOTAL
+            img.style.setProperty('height', '800px', 'important');
+            img.style.setProperty('min-height', '800px', 'important');
+            img.style.setProperty('object-fit', 'cover', 'important');
+            img.style.setProperty('object-position', 'center 0%', 'important'); // DESDE EL MERO TOP
+            img.style.setProperty('width', '100%', 'important');
+            img.style.setProperty('display', 'block', 'important');
+            
+            // También aplicar al elemento padre por si acaso
+            const slide = img.parentElement;
+            if (slide) {
+                slide.style.setProperty('height', '800px', 'important');
+                slide.style.setProperty('min-height', '800px', 'important');
+            }
+            
+            console.log(`💀 IMAGEN ${index + 1} SOMETIDA: height=800px, position=center 0%`);
+        });
+        console.log('💣 SOLUCIÓN NUCLEAR APOCALÍPTICA APLICADA: 800px + center 0%');
     }
     
     // Aplicar estilos forzados múltiples veces para asegurar que funcionen
@@ -316,14 +338,34 @@ document.addEventListener('DOMContentLoaded', function() {
         // Después de 2 segundos
         setTimeout(forceProductionStyles, 2000);
         
-        // Al cambiar tamaño de ventana
+        // ACOSO CONTINUO a las imágenes rebeldes
+        const harassImages = () => {
+            nuclearSolution();
+            setTimeout(nuclearSolution, 50);
+            setTimeout(nuclearSolution, 100);
+        };
+        
+        // Al cambiar tamaño de ventana - ACOSO
         window.addEventListener('resize', () => {
-            setTimeout(forceProductionStyles, 100);
+            setTimeout(harassImages, 10);
         });
         
-        // Al cargar todas las imágenes
+        // Al cargar todas las imágenes - ACOSO
         window.addEventListener('load', () => {
-            setTimeout(forceProductionStyles, 500);
+            setTimeout(harassImages, 100);
+        });
+        
+        // ACOSO por intervalos (cada 5 segundos por si se rebelan)
+        setInterval(() => {
+            console.log('🔄 Verificando que las imágenes sigan obedeciendo...');
+            nuclearSolution();
+        }, 5000);
+        
+        // ACOSO al hacer scroll (por si se mueven)
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(nuclearSolution, 100);
         });
     }
 
