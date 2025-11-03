@@ -244,32 +244,32 @@ document.addEventListener('DOMContentLoaded', function() {
             const isMobile = window.innerWidth <= 768;
             const isSmallMobile = window.innerWidth <= 480;
             
-            // Forzar altura del contenedor
+            // 💣 SOLUCIÓN NUCLEAR: Alturas MÁS GRANDES
             if (isSmallMobile) {
-                container.style.height = '500px';
-                container.style.minHeight = '500px';
-                console.log('📱 Aplicando estilos para móvil pequeño: 500px');
+                container.style.height = '650px';  // Era 500px
+                container.style.minHeight = '650px';
+                console.log('📱 NUCLEAR: Aplicando estilos para móvil pequeño: 650px');
             } else if (isMobile) {
-                container.style.height = '550px';
-                container.style.minHeight = '550px';
-                console.log('📱 Aplicando estilos para móvil: 550px');
+                container.style.height = '700px';  // Era 550px
+                container.style.minHeight = '700px';
+                console.log('📱 NUCLEAR: Aplicando estilos para móvil: 700px');
             } else {
-                container.style.height = '600px';
-                container.style.minHeight = '600px';
-                console.log('💻 Aplicando estilos para desktop: 600px');
+                container.style.height = '750px';  // Era 600px
+                container.style.minHeight = '750px';
+                console.log('💻 NUCLEAR: Aplicando estilos para desktop: 750px');
             }
         }
         
-        // Forzar estilos en todas las imágenes
+        // 💣 SOLUCIÓN NUCLEAR: Forzar estilos en todas las imágenes
         images.forEach((img, index) => {
             if (isSmallMobile) {
-                img.style.height = '500px';
-                img.style.objectPosition = 'center 10%';
+                img.style.height = '650px';  // Era 500px
+                img.style.objectPosition = 'center 5%';  // Más arriba
             } else if (isMobile) {
-                img.style.height = '550px';
-                img.style.objectPosition = 'center top';
+                img.style.height = '700px';  // Era 550px
+                img.style.objectPosition = 'center 5%';  // Más arriba
             } else {
-                img.style.height = '600px';
+                img.style.height = '750px';  // Era 600px
                 img.style.objectPosition = 'center top';
             }
             
@@ -281,16 +281,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // 💣 FUNCIÓN NUCLEAR: Para cuando la frustración llegue al límite
+    function nuclearSolution() {
+        const images = document.querySelectorAll('.carousel-slide img');
+        images.forEach(img => {
+            img.style.setProperty('height', '700px', 'important');
+            img.style.setProperty('object-fit', 'cover', 'important');
+            img.style.setProperty('object-position', 'center 3%', 'important');
+            img.style.setProperty('width', '100%', 'important');
+        });
+        console.log('💣 SOLUCIÓN NUCLEAR APLICADA: 700px forzado con !important');
+    }
+    
     // Aplicar estilos forzados múltiples veces para asegurar que funcionen
     function applyForceStylesMultipleTimes() {
         // Inmediatamente
         forceProductionStyles();
         
+        // NUCLEAR después de 100ms
+        setTimeout(nuclearSolution, 100);
+        
         // Después de 500ms
         setTimeout(forceProductionStyles, 500);
         
+        // NUCLEAR otra vez
+        setTimeout(nuclearSolution, 800);
+        
         // Después de 1 segundo
         setTimeout(forceProductionStyles, 1000);
+        
+        // NUCLEAR final
+        setTimeout(nuclearSolution, 1500);
         
         // Después de 2 segundos
         setTimeout(forceProductionStyles, 2000);
