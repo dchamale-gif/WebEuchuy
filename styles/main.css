@@ -1016,15 +1016,17 @@ em, i {
 }
 
 .loader-letter {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 8rem;
-    font-weight: 800;
+    font-family: 'Dancing Script', cursive;
+    font-size: 10rem;
+    font-weight: 700;
     color: var(--brand);
     text-shadow: 0 8px 32px rgba(112, 191, 205, 0.3);
     margin-bottom: var(--spacing-md);
     animation: drawLetter 2s ease-in-out infinite, letterGlow 3s ease-in-out infinite;
     position: relative;
     line-height: 1;
+    font-style: italic;
+    letter-spacing: 0.05em;
 }
 
 .loader-letter::before {
