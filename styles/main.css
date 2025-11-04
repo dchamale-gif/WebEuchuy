@@ -416,13 +416,13 @@ header{
 
 /* Main */
 main{
-    padding: var(--spacing-sm) 0 var(--spacing-lg) 0;
+    padding: 8px 0 var(--spacing-lg) 0;
 }
 h1 {
     font-family: 'Montserrat', sans-serif;
     font-size: clamp(2.5rem, 8vw, 4.5rem);
     line-height: 1.1;
-    margin: 0 0 var(--spacing-sm);
+    margin: 0 0 8px;
     color: var(--brand);
     text-shadow: 3px 3px 6px rgba(0,0,0,0.15);
     font-weight: 800;
@@ -438,14 +438,14 @@ h1::after {
     width: 100px;
     height: 4px;
     background: var(--brand);
-    margin: var(--spacing-sm) auto;
+    margin: 8px auto;
     border-radius: 2px;
     box-shadow: 2px 2px 4px rgba(0,0,0,0.1);
 }
 
 .subtitle {
     font-family: 'Dancing Script', cursive;
-    margin: 0 0 var(--spacing-lg);
+    margin: 0 0 16px;
     color: #4a90a4;
     font-weight: 600;
     font-size: clamp(1.5rem, 5vw, 2.5rem);
