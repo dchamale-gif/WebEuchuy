@@ -416,7 +416,7 @@ header{
 
 /* Main */
 main{
-    padding: var(--spacing-lg) 0;
+    padding: var(--spacing-sm) 0 var(--spacing-lg) 0;
 }
 h1 {
     font-family: 'Montserrat', sans-serif;
