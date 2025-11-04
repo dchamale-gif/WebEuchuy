@@ -13,45 +13,168 @@ window.addEventListener('load', function() {
     }
 });
 
-// Función para manejar el envío del formulario
+// Inicializar EmailJS
+function initEmailJS() {
+    if (typeof emailjs !== 'undefined') {
+        emailjs.init("l_eJURlqIbyXU1U0X");
+        console.log('EmailJS inicializado correctamente');
+        return true;
+    } else {
+        console.error('EmailJS no está disponible. Verifica que el CDN se haya cargado.');
+        return false;
+    }
+}
+
+// Función para manejar el envío del formulario con EmailJS
 document.addEventListener('DOMContentLoaded', function() {
-    // Formulario
-    const form = document.querySelector('form');
-    if (form) {
+    // Inicializar EmailJS cuando el DOM esté listo
+    const emailJSReady = initEmailJS();
+    
+    // Formularios
+    const forms = document.querySelectorAll('.contact-form');
+    console.log('Formularios encontrados:', forms.length);
+    
+    forms.forEach(form => {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
+            console.log('Formulario enviado - preventDefault activado');
             
-            // Obtener los valores del formulario
-            const formData = new FormData(this);
-            const data = {
-                nombre: formData.get('nombre'),
-                apellido: formData.get('apellido'),
-                email: formData.get('email'),
-                mensaje: formData.get('mensaje')
-            };
+            // Verificar que EmailJS esté disponible
+            if (!emailJSReady || typeof emailjs === 'undefined') {
+                console.error('EmailJS no está disponible');
+                showNotification('Error: Servicio de email no disponible. Por favor contacta por WhatsApp.', 'error');
+                return;
+            }
             
-            // Mostrar mensaje de éxito
             const submitBtn = this.querySelector('.btn');
             const originalText = submitBtn.textContent;
             
+            // Cambiar estado del botón
             submitBtn.textContent = 'Enviando...';
             submitBtn.disabled = true;
             
-            // Simular envío
-            setTimeout(() => {
-                submitBtn.textContent = '¡Enviado!';
-                submitBtn.style.background = '#10b981';
-                
-                setTimeout(() => {
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                    submitBtn.style.background = '';
-                    this.reset();
-                }, 2000);
-            }, 1000);
+            // Obtener todos los datos del formulario
+            const formData = new FormData(this);
+            const templateParams = {};
             
-            console.log('Formulario enviado:', data);
+            // Convertir FormData a objeto
+            for (let [key, value] of formData.entries()) {
+                templateParams[key] = value;
+            }
+            
+            // Agregar información adicional
+            templateParams.pagina = document.title;
+            templateParams.fecha = new Date().toLocaleString('es-GT');
+            
+            console.log('Datos del formulario:', templateParams);
+            console.log('Enviando con EmailJS...');
+            
+            // Enviar email usando EmailJS
+            emailjs.send('service_4fheqyt', 'template_8b59m3l', templateParams)
+                .then(function(response) {
+                    console.log('Email enviado exitosamente!', response.status, response.text);
+                    
+                    // Mostrar éxito
+                    submitBtn.textContent = '¡Enviado!';
+                    submitBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                    
+                    // Mostrar mensaje de éxito
+                    showNotification('¡Gracias! Tu mensaje ha sido enviado correctamente. Te contactaré pronto.', 'success');
+                    
+                    // Resetear formulario después de 2 segundos
+                    setTimeout(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        submitBtn.style.background = '';
+                        form.reset();
+                    }, 2000);
+                    
+                }, function(error) {
+                    console.error('Error al enviar email:', error);
+                    
+                    // Mostrar error
+                    submitBtn.textContent = 'Error';
+                    submitBtn.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+                    
+                    showNotification('Hubo un error al enviar el mensaje. Por favor intenta de nuevo o contacta por WhatsApp.', 'error');
+                    
+                    // Volver al estado original después de 3 segundos
+                    setTimeout(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        submitBtn.style.background = '';
+                    }, 3000);
+                });
         });
+    });
+
+    // Función para mostrar notificaciones
+    function showNotification(message, type = 'success') {
+        // Crear elemento de notificación
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <span class="notification-icon">${type === 'success' ? '✅' : '❌'}</span>
+                <span class="notification-message">${message}</span>
+            </div>
+        `;
+        
+        // Estilos inline para la notificación
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${type === 'success' ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'};
+            color: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            font-family: var(--font-primary, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+            font-size: 14px;
+            max-width: 400px;
+            animation: slideIn 0.3s ease-out;
+            transform: translateX(100%);
+        `;
+        
+        // Agregar animación CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            .notification-content {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Agregar al DOM
+        document.body.appendChild(notification);
+        
+        // Animación de entrada
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+            notification.style.opacity = '1';
+        }, 10);
+        
+        // Remover después de 5 segundos
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease-in forwards';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 5000);
     }
 
     // Menú móvil hamburguesa

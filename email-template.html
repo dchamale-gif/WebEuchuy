@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo contacto desde tu web</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            max-width: 600px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        .header { 
+            background: linear-gradient(135deg, #70BFCD 0%, #5A9CAB 100%); 
+            color: white; 
+            padding: 20px; 
+            border-radius: 8px 8px 0 0; 
+            text-align: center; 
+        }
+        .content { 
+            background: #f8f9fa; 
+            padding: 20px; 
+            border: 1px solid #e9ecef; 
+        }
+        .footer { 
+            background: #343a40; 
+            color: white; 
+            padding: 15px 20px; 
+            border-radius: 0 0 8px 8px; 
+            text-align: center; 
+            font-size: 12px; 
+        }
+        .field { 
+            margin-bottom: 15px; 
+            padding: 10px; 
+            background: white; 
+            border-left: 4px solid #70BFCD; 
+            border-radius: 4px; 
+        }
+        .field strong { 
+            color: #495057; 
+            display: block; 
+            margin-bottom: 5px; 
+        }
+        .highlight { 
+            background: linear-gradient(135deg, #70BFCD20 0%, #5A9CAB20 100%); 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin: 15px 0; 
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>🎯 Nuevo Cliente Potencial</h2>
+        <p>Formulario enviado desde: <strong>{{pagina}}</strong></p>
+        <p><small>📅 {{fecha}}</small></p>
+    </div>
+    
+    <div class="content">
+        <div class="highlight">
+            <h3>👤 Información de Contacto</h3>
+        </div>
+        
+        <div class="field">
+            <strong>Nombre:</strong>
+            {{nombre}}
+        </div>
+        
+        <div class="field">
+            <strong>📧 Email:</strong>
+            <a href="mailto:{{email}}">{{email}}</a>
+        </div>
+        
+        <div class="field">
+            <strong>📱 Teléfono:</strong>
+            {{telefono}}
+        </div>
+        
+        <div class="field">
+            <strong>🏢 Empresa/Marca:</strong>
+            {{empresa}}
+        </div>
+
+        <div class="highlight">
+            <h3>🎯 Detalles del Proyecto</h3>
+        </div>
+
+        <div class="field">
+            <strong>💼 Industria:</strong>
+            {{industria}}
+        </div>
+
+        <div class="field">
+            <strong>🎨 Mensaje/Proyecto:</strong>
+            {{mensaje}}
+        </div>
+
+        <div class="field">
+            <strong>🏆 Objetivos:</strong>
+            {{objetivos}}
+        </div>
+
+        <div class="field">
+            <strong>👥 Audiencia:</strong>
+            {{audiencia}}
+        </div>
+
+        <div class="field">
+            <strong>📱 Plataformas:</strong>
+            {{plataformas}}
+        </div>
+
+        <div class="field">
+            <strong>💰 Presupuesto:</strong>
+            {{presupuesto}}
+        </div>
+
+        <div class="highlight">
+            <h3>📞 Acciones Rápidas</h3>
+            <p>
+                <a href="mailto:{{email}}" style="background: #70BFCD; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; margin-right: 10px;">📧 Responder Email</a>
+                <a href="https://wa.me/502{{telefono}}?text=Hola%20{{nombre}}!%20Recibí%20tu%20mensaje%20desde%20mi%20web" style="background: #25D366; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px;">📱 WhatsApp</a>
+            </p>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>Este mensaje fue enviado automáticamente desde tu sitio web</p>
+        <p><strong>EuniceChuy.com</strong> • Creadora de Contenido • Ciudad de Guatemala</p>
+    </div>
+</body>
+</html>
