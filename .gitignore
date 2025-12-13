@@ -33,3 +33,8 @@ Thumbs.db
 # Carpetas de build/dist
 dist/
 build/
+
+# Datos del admin (opcional - descomentar si no quieres subir datos)
+# data/
+# *.db
+# *.sqlite

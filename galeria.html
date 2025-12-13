@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería de Imágenes - Eunice Chuy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .gallery-item {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-item .info {
+            padding: 20px;
+        }
+
+        .gallery-item .info h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .gallery-item .info p {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .masonry-grid {
+            columns: 4;
+            column-gap: 20px;
+        }
+
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .masonry-item img {
+            width: 100%;
+            display: block;
+        }
+
+        .section-title {
+            font-size: 32px;
+            color: #333;
+            margin: 60px 0 30px;
+            text-align: center;
+        }
+
+        .carousel {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            height: 500px;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            padding: 0 20px;
+        }
+
+        .carousel-btn {
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .carousel-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 1200px) {
+            .masonry-grid { columns: 3; }
+        }
+
+        @media (max-width: 768px) {
+            .masonry-grid { columns: 2; }
+            .header h1 { font-size: 32px; }
+        }
+
+        @media (max-width: 480px) {
+            .masonry-grid { columns: 1; }
+            .gallery-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📸 Galería de Imágenes</h1>
+            <p>Colección de fotografías y contenido visual</p>
+        </div>
+
+        <h2 class="section-title">Grid Layout</h2>
+        <div class="gallery-grid" id="galleryGrid">
+            <!-- Las imágenes se cargarán aquí -->
+        </div>
+
+        <h2 class="section-title">Masonry Layout</h2>
+        <div class="masonry-grid" id="masonryGrid">
+            <!-- Imágenes en layout masonry -->
+        </div>
+
+        <h2 class="section-title">Carousel</h2>
+        <div class="carousel">
+            <div class="carousel-inner" id="carouselInner">
+                <!-- Slides del carousel -->
+            </div>
+            <div class="carousel-controls">
+                <button class="carousel-btn" onclick="previousSlide()">‹</button>
+                <button class="carousel-btn" onclick="nextSlide()">›</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cargar imágenes desde el servidor o localStorage
+        async function loadGallery() {
+            let images = [];
+            
+            try {
+                // Intentar cargar desde el servidor
+                const response = await fetch('/api/images');
+                if (response.ok) {
+                    const result = await response.json();
+                    images = result.images || [];
+                }
+            } catch (error) {
+                console.log('Cargando desde localStorage');
+            }
+            
+            // Fallback a localStorage
+            if (images.length === 0) {
+                const stored = localStorage.getItem('adminImages');
+                images = stored ? JSON.parse(stored) : [
+                    { id: 1, name: 'IMG_8498.JPG', url: 'assets/IMG_8498.JPG' },
+                    { id: 2, name: 'IMG_8499.JPG', url: 'assets/IMG_8499.JPG' },
+                    { id: 3, name: 'IMG_8500.JPG', url: 'assets/IMG_8500.JPG' },
+                    { id: 4, name: 'IMG_8501.JPG', url: 'assets/IMG_8501.JPG' }
+                ];
+            }
+            
+            renderGallery(images);
+            renderMasonry(images);
+            renderCarousel(images);
+        }
+
+        function renderGallery(images) {
+            const grid = document.getElementById('galleryGrid');
+            grid.innerHTML = images.map(img => `
+                <div class="gallery-item">
+                    <img src="${img.url}" alt="${img.name}" loading="lazy">
+                    <div class="info">
+                        <h3>${img.name}</h3>
+                        <p>📅 ${img.date || 'Sin fecha'}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderMasonry(images) {
+            const masonry = document.getElementById('masonryGrid');
+            masonry.innerHTML = images.map(img => `
+                <div class="masonry-item">
+                    <img src="${img.url}" alt="${img.name}" loading="lazy">
+                </div>
+            `).join('');
+        }
+
+        function renderCarousel(images) {
+            const carousel = document.getElementById('carouselInner');
+            carousel.innerHTML = images.map(img => `
+                <div class="carousel-item">
+                    <img src="${img.url}" alt="${img.name}">
+                </div>
+            `).join('');
+        }
+
+        let currentSlide = 0;
+
+        function nextSlide() {
+            const carousel = document.getElementById('carouselInner');
+            const totalSlides = carousel.children.length;
+            currentSlide = (currentSlide + 1) % totalSlides;
+            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        function previousSlide() {
+            const carousel = document.getElementById('carouselInner');
+            const totalSlides = carousel.children.length;
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        // Auto-play carousel
+        setInterval(nextSlide, 5000);
+
+        // Cargar galería al iniciar
+        window.addEventListener('load', loadGallery);
+    </script>
+</body>
+</html>

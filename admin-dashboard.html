@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Eunice Chuy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            font-size: 14px;
+        }
+
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-logout:hover {
+            background: white;
+            color: #764ba2;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            font-size: 40px;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+        }
+
+        .stat-icon.blue { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .stat-icon.green { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .stat-icon.orange { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .stat-icon.purple { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+
+        .stat-info h3 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .stat-info p {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section-header h2 {
+            font-size: 22px;
+            color: #333;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f5576c 0%, #e63946 100%);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f0f0f0;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .tab.active {
+            color: #764ba2;
+            border-bottom-color: #764ba2;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .action-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: block;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(118, 75, 162, 0.3);
+        }
+
+        .action-card .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .action-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .action-card p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+            min-width: 300px;
+            border-left: 4px solid #764ba2;
+        }
+
+        .notification.show {
+            display: block;
+            animation: slideInRight 0.3s;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎨 Panel de Administración</h1>
+        <div class="header-right">
+            <div class="user-info">
+                <strong id="userName"></strong>
+            </div>
+            <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Estadísticas -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">📸</div>
+                <div class="stat-info">
+                    <h3 id="totalImages">4</h3>
+                    <p>Imágenes totales</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">📝</div>
+                <div class="stat-info">
+                    <h3 id="totalBlogs">3</h3>
+                    <p>Entradas de blog</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">📄</div>
+                <div class="stat-info">
+                    <h3 id="totalPages">4</h3>
+                    <p>Páginas activas</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon purple">👁️</div>
+                <div class="stat-info">
+                    <h3 id="totalVisits">—</h3>
+                    <p>Visitas del mes</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acciones rápidas -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Acciones Rápidas</h2>
+            </div>
+            <div class="quick-actions">
+                <a href="#" class="action-card" onclick="showTab('images'); return false;">
+                    <div class="icon">📸</div>
+                    <h3>Gestionar Imágenes</h3>
+                    <p>Subir y organizar fotos</p>
+                </a>
+                <a href="#" class="action-card" onclick="showTab('blogs'); return false;">
+                    <div class="icon">📝</div>
+                    <h3>Gestionar Blogs</h3>
+                    <p>Crear y editar entradas</p>
+                </a>
+                <a href="#" class="action-card" onclick="showTab('pages'); return false;">
+                    <div class="icon">🌐</div>
+                    <h3>Editar Páginas</h3>
+                    <p>Modificar contenido del sitio</p>
+                </a>
+                <a href="index.html" class="action-card" target="_blank">
+                    <div class="icon">👁️</div>
+                    <h3>Ver Sitio</h3>
+                    <p>Previsualizar cambios</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- Pestañas de gestión -->
+        <div class="section">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('images')">📸 Imágenes</button>
+                <button class="tab" onclick="showTab('blogs')">📝 Blogs</button>
+                <button class="tab" onclick="showTab('pages')">🌐 Páginas</button>
+            </div>
+
+            <!-- Tab de Imágenes -->
+            <div id="images-tab" class="tab-content active">
+                <div class="section-header">
+                    <h2>Gestión de Imágenes</h2>
+                    <button class="btn" onclick="uploadImage()">+ Subir Imagen</button>
+                </div>
+                <div id="images-content">
+                    <p style="color: #666;">Cargando imágenes...</p>
+                </div>
+            </div>
+
+            <!-- Tab de Blogs -->
+            <div id="blogs-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>Gestión de Blogs</h2>
+                    <button class="btn" onclick="createBlog()">+ Nuevo Blog</button>
+                </div>
+                <div id="blogs-content">
+                    <p style="color: #666;">Cargando blogs...</p>
+                </div>
+            </div>
+
+            <!-- Tab de Páginas -->
+            <div id="pages-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>Gestión de Páginas</h2>
+                </div>
+                <div id="pages-content">
+                    <p style="color: #666;">Cargando páginas...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script src="scripts/admin.js"></script>
+</body>
+</html>

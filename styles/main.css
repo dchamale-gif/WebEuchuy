@@ -324,6 +324,20 @@ header{
     color: white;
 }
 
+.menu a.admin-link {
+    font-size: 18px;
+    padding: 6px 12px;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.menu a.admin-link:hover {
+    opacity: 1;
+    background: rgba(112, 191, 205, 0.2);
+    transform: scale(1.1);
+}
+
 .btn{
     font-family: 'Montserrat', sans-serif;
     background: var(--btn);
@@ -969,14 +983,19 @@ footer {
     backface-visibility: hidden;
 }
 
-/* Reducir mariposas en móviles muy pequeños para mejor rendimiento */
-@media (max-width: 480px) {
-    .butterfly:nth-child(n+4) {
-        display: none;
-    }
+/* Optimizar mariposas para móviles */
+@media (max-width: 768px) {
     .butterfly {
-        width: 60px;
-        height: 60px;
+        width: 50px !important;
+        height: 50px !important;
+        opacity: 0.6;
+    }
+}
+
+@media (max-width: 480px) {
+    .butterfly {
+        width: 40px !important;
+        height: 40px !important;
         opacity: 0.5;
     }
 }
@@ -1467,6 +1486,149 @@ em, i {
     .carousel-indicators {
         bottom: 10px; /* Indicadores más cerca del borde */
         padding: 4px 8px;
+    }
+}
+
+/* ====================================
+   DECORACIONES NAVIDEÑAS
+==================================== */
+
+/* Árbol de Navidad decorativo */
+.christmas-tree {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 80px;
+    z-index: 999;
+    opacity: 0.9;
+    animation: treeGlow 2s ease-in-out infinite;
+    pointer-events: none;
+    filter: drop-shadow(0 0 10px rgba(34, 139, 34, 0.5));
+}
+
+@keyframes treeGlow {
+    0%, 100% { 
+        transform: scale(1);
+        filter: drop-shadow(0 0 10px rgba(34, 139, 34, 0.5));
+    }
+    50% { 
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+    }
+}
+
+/* Copos de nieve */
+.snowflakes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.snowflake {
+    position: absolute;
+    top: -10%;
+    color: #fff;
+    font-size: 1em;
+    opacity: 0.8;
+    animation: fall linear infinite;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+    }
+}
+
+/* Posiciones y velocidades aleatorias para cada copo */
+.snowflake:nth-child(1) {
+    left: 10%;
+    animation-duration: 10s;
+    animation-delay: 0s;
+    font-size: 1.2em;
+}
+
+.snowflake:nth-child(2) {
+    left: 20%;
+    animation-duration: 12s;
+    animation-delay: 1s;
+    font-size: 0.8em;
+}
+
+.snowflake:nth-child(3) {
+    left: 30%;
+    animation-duration: 8s;
+    animation-delay: 2s;
+    font-size: 1.5em;
+}
+
+.snowflake:nth-child(4) {
+    left: 40%;
+    animation-duration: 14s;
+    animation-delay: 0.5s;
+    font-size: 1em;
+}
+
+.snowflake:nth-child(5) {
+    left: 50%;
+    animation-duration: 11s;
+    animation-delay: 1.5s;
+    font-size: 1.3em;
+}
+
+.snowflake:nth-child(6) {
+    left: 60%;
+    animation-duration: 9s;
+    animation-delay: 2.5s;
+    font-size: 0.9em;
+}
+
+.snowflake:nth-child(7) {
+    left: 70%;
+    animation-duration: 13s;
+    animation-delay: 0.8s;
+    font-size: 1.1em;
+}
+
+.snowflake:nth-child(8) {
+    left: 80%;
+    animation-duration: 10.5s;
+    animation-delay: 1.8s;
+    font-size: 1.4em;
+}
+
+.snowflake:nth-child(9) {
+    left: 90%;
+    animation-duration: 12.5s;
+    animation-delay: 0.3s;
+    font-size: 0.85em;
+}
+
+.snowflake:nth-child(10) {
+    left: 15%;
+    animation-duration: 11.5s;
+    animation-delay: 2.2s;
+    font-size: 1.25em;
+}
+
+/* Ajustes responsive para decoraciones navideñas */
+@media (max-width: 768px) {
+    .christmas-tree {
+        font-size: 50px;
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .snowflake {
+        font-size: 0.8em;
     }
 }
 
