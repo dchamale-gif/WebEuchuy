@@ -545,6 +545,252 @@ function editPage(pageId) {
     showNotification('Página actualizada correctamente', 'success');
 }
 
+// ============= GESTIÓN DE PUBLICACIONES =============
+
+async function loadPosts() {
+    try {
+        const response = await fetch('http://localhost:5003/api/posts/all');
+        const data = await response.json();
+        displayPosts(data.posts || []);
+    } catch (error) {
+        console.log('Error al cargar publicaciones del servidor:', error);
+        displayPosts([]);
+    }
+}
+
+function displayPosts(posts) {
+    const container = document.getElementById('posts-content');
+    
+    if (posts.length === 0) {
+        container.innerHTML = '<p style="color: #666; text-align: center; padding: 40px;">No hay publicaciones. Crea tu primera publicación.</p>';
+        return;
+    }
+    
+    container.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            ${posts.map(post => `
+                <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                        <div style="flex: 1;">
+                            <p style="color: #666; font-size: 12px; margin-bottom: 8px;">
+                                📅 ${new Date(post.date).toLocaleDateString('es-ES', { 
+                                    year: 'numeric', 
+                                    month: 'long', 
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}
+                            </p>
+                            <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">${post.message}</p>
+                        </div>
+                        <span style="padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-left: 15px; ${post.published ? 'background: #d1fae5; color: #065f46;' : 'background: #fee; color: #991b1b;'}">
+                            ${post.published ? '✓ Publicado' : '✗ Borrador'}
+                        </span>
+                    </div>
+                    
+                    ${post.image ? `
+                        <div style="margin-bottom: 15px;">
+                            <img src="${post.image}" alt="Imagen de publicación" 
+                                 style="width: 100%; max-width: 400px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        </div>
+                    ` : ''}
+                    
+                    <div style="padding: 15px; background: #f9fafb; border-radius: 8px; margin-bottom: 15px;">
+                        <p style="font-size: 13px; font-weight: 600; color: #666; margin-bottom: 10px;">
+                            💬 Comentarios (${post.comments ? post.comments.length : 0})
+                        </p>
+                        ${post.comments && post.comments.length > 0 ? `
+                            <div style="display: flex; flex-direction: column; gap: 10px; max-height: 200px; overflow-y: auto;">
+                                ${post.comments.map(comment => `
+                                    <div style="background: white; padding: 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: start;">
+                                        <div style="flex: 1;">
+                                            <p style="font-weight: 600; font-size: 13px; color: #333; margin-bottom: 4px;">${comment.name}</p>
+                                            <p style="font-size: 13px; color: #666;">${comment.message}</p>
+                                            <p style="font-size: 11px; color: #999; margin-top: 4px;">
+                                                ${new Date(comment.date).toLocaleDateString('es-ES', { 
+                                                    month: 'short', 
+                                                    day: 'numeric',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })}
+                                            </p>
+                                        </div>
+                                        <button onclick="deleteComment(${post.id}, ${comment.id})" 
+                                                style="padding: 4px 8px; background: #fee; color: #991b1b; border: none; border-radius: 4px; cursor: pointer; font-size: 11px;">
+                                            🗑️
+                                        </button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : '<p style="font-size: 12px; color: #999; font-style: italic;">No hay comentarios todavía</p>'}
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button onclick="editPost(${post.id})" 
+                                style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">
+                            ✏️ Editar
+                        </button>
+                        <button onclick="togglePublishPost(${post.id})" 
+                                style="padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">
+                            ${post.published ? '📥 Despublicar' : '📤 Publicar'}
+                        </button>
+                        <button onclick="deletePost(${post.id})" 
+                                style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">
+                            🗑️ Eliminar
+                        </button>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+async function createPost() {
+    const message = prompt('Escribe tu mensaje (ej: "Hoy hice unas tomas hermosas en Cayalá, esperen mi video en mis redes 📸"):');
+    if (!message || message.trim() === '') return;
+    
+    const addImage = confirm('¿Quieres agregar una imagen a esta publicación?');
+    let imageUrl = null;
+    
+    if (addImage) {
+        const images = getImages();
+        if (images.length === 0) {
+            alert('Primero debes subir imágenes en la sección de Imágenes');
+            return;
+        }
+        
+        // Mostrar selector de imágenes
+        const imageList = images.map((img, index) => `${index + 1}. ${img.name}`).join('\n');
+        const imageIndex = prompt(`Selecciona una imagen (1-${images.length}):\n${imageList}`);
+        
+        if (imageIndex && parseInt(imageIndex) > 0 && parseInt(imageIndex) <= images.length) {
+            imageUrl = images[parseInt(imageIndex) - 1].url;
+        }
+    }
+    
+    const published = confirm('¿Publicar inmediatamente? (Cancelar = Guardar como borrador)');
+    
+    try {
+        const response = await fetch('http://localhost:5003/api/posts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message, image: imageUrl, published })
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            showNotification(published ? 'Publicación creada y publicada' : 'Publicación guardada como borrador', 'success');
+            loadPosts();
+            updateStats();
+        }
+    } catch (error) {
+        showNotification('Error al crear publicación', 'error');
+        console.error(error);
+    }
+}
+
+async function editPost(postId) {
+    try {
+        const response = await fetch('http://localhost:5003/api/posts/all');
+        const data = await response.json();
+        const post = data.posts.find(p => p.id === postId);
+        
+        if (!post) {
+            alert('Publicación no encontrada');
+            return;
+        }
+        
+        const newMessage = prompt('Editar mensaje:', post.message);
+        if (newMessage === null) return;
+        
+        const updateResponse = await fetch(`http://localhost:5003/api/posts/${postId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: newMessage })
+        });
+        
+        const updateData = await updateResponse.json();
+        if (updateData.success) {
+            showNotification('Publicación actualizada', 'success');
+            loadPosts();
+        }
+    } catch (error) {
+        showNotification('Error al editar publicación', 'error');
+        console.error(error);
+    }
+}
+
+async function togglePublishPost(postId) {
+    try {
+        const response = await fetch('http://localhost:5003/api/posts/all');
+        const data = await response.json();
+        const post = data.posts.find(p => p.id === postId);
+        
+        if (!post) {
+            alert('Publicación no encontrada');
+            return;
+        }
+        
+        const updateResponse = await fetch(`http://localhost:5003/api/posts/${postId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ published: !post.published })
+        });
+        
+        const updateData = await updateResponse.json();
+        if (updateData.success) {
+            showNotification(post.published ? 'Publicación despublicada' : 'Publicación publicada', 'success');
+            loadPosts();
+        }
+    } catch (error) {
+        showNotification('Error al actualizar publicación', 'error');
+        console.error(error);
+    }
+}
+
+async function deletePost(postId) {
+    if (!confirm('¿Estás segura de que quieres eliminar esta publicación? Esta acción no se puede deshacer.')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`http://localhost:5003/api/posts/${postId}`, {
+            method: 'DELETE'
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            showNotification('Publicación eliminada', 'success');
+            loadPosts();
+            updateStats();
+        }
+    } catch (error) {
+        showNotification('Error al eliminar publicación', 'error');
+        console.error(error);
+    }
+}
+
+async function deleteComment(postId, commentId) {
+    if (!confirm('¿Eliminar este comentario?')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`http://localhost:5003/api/posts/${postId}/comments/${commentId}`, {
+            method: 'DELETE'
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            showNotification('Comentario eliminado', 'success');
+            loadPosts();
+        }
+    } catch (error) {
+        showNotification('Error al eliminar comentario', 'error');
+        console.error(error);
+    }
+}
+
 // ============= ACTUALIZAR ESTADÍSTICAS =============
 
 function updateStats() {
@@ -563,6 +809,7 @@ window.addEventListener('load', function() {
     if (!checkAuth()) return;
     
     // Intentar cargar desde el servidor primero
+    loadPosts();
     loadImagesFromServer();
     loadBlogs();
     loadPages();

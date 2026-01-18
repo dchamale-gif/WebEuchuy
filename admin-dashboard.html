@@ -363,13 +363,25 @@
         <!-- Pestañas de gestión -->
         <div class="section">
             <div class="tabs">
-                <button class="tab active" onclick="showTab('images')">📸 Imágenes</button>
+                <button class="tab active" onclick="showTab('posts')">📱 Publicaciones</button>
+                <button class="tab" onclick="showTab('images')">📸 Imágenes</button>
                 <button class="tab" onclick="showTab('blogs')">📝 Blogs</button>
                 <button class="tab" onclick="showTab('pages')">🌐 Páginas</button>
             </div>
 
+            <!-- Tab de Publicaciones -->
+            <div id="posts-tab" class="tab-content active">
+                <div class="section-header">
+                    <h2>Publicaciones</h2>
+                    <button class="btn" onclick="createPost()">+ Nueva Publicación</button>
+                </div>
+                <div id="posts-content">
+                    <p style="color: #666;">Cargando publicaciones...</p>
+                </div>
+            </div>
+
             <!-- Tab de Imágenes -->
-            <div id="images-tab" class="tab-content active">
+            <div id="images-tab" class="tab-content">
                 <div class="section-header">
                     <h2>Gestión de Imágenes</h2>
                     <button class="btn" onclick="uploadImage()">+ Subir Imagen</button>

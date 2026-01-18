@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publicaciones - Eunice Chuy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzcwQkZDRCIvPgo8cGF0aCBkPSJNOSA4SDE5VjEwSDExVjE0SDE4VjE2SDExVjIwSDE5VjIySDlWOFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(28px, 5vw, 42px);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: clamp(14px, 2vw, 16px);
+        }
+
+        .header .back-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .header .back-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(118, 75, 162, 0.4);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .post {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .post:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .post-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .post-info h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .post-date {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .post-message {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+        }
+
+        .post-image {
+            width: 100%;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .comments-section {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .comments-header {
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .comment {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            font-size: 14px;
+            color: #667eea;
+            margin-bottom: 6px;
+        }
+
+        .comment-message {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .comment-date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .comment-form {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 12px;
+        }
+
+        .comment-form h4 {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(118, 75, 162, 0.4);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            font-size: 18px;
+            color: #666;
+        }
+
+        .no-posts {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .no-posts h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .no-posts p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid #10b981;
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            border-left-color: #ef4444;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px 15px;
+            }
+
+            .post {
+                padding: 20px;
+            }
+
+            .comment-form {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>✨ Publicaciones de Eunice</h1>
+        <p>Sígueme en mis aventuras creativas 📸🎬</p>
+        <a href="index.html" class="back-link">← Volver al inicio</a>
+    </div>
+
+    <div class="container" id="posts-container">
+        <div class="loading">Cargando publicaciones...</div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        const API_URL = 'http://localhost:5003/api';
+
+        // Mostrar notificación
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification' + (type === 'error' ? ' error' : '');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Cargar publicaciones
+        async function loadPosts() {
+            try {
+                const response = await fetch(`${API_URL}/posts`);
+                const data = await response.json();
+                displayPosts(data.posts || []);
+            } catch (error) {
+                console.error('Error al cargar publicaciones:', error);
+                document.getElementById('posts-container').innerHTML = `
+                    <div class="no-posts">
+                        <h2>Error al cargar</h2>
+                        <p>No se pudieron cargar las publicaciones. Asegúrate de que el servidor esté corriendo.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Mostrar publicaciones
+        function displayPosts(posts) {
+            const container = document.getElementById('posts-container');
+            
+            if (posts.length === 0) {
+                container.innerHTML = `
+                    <div class="no-posts">
+                        <h2>No hay publicaciones aún</h2>
+                        <p>¡Pronto habrá contenido nuevo! 🎉</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = posts.map(post => `
+                <div class="post">
+                    <div class="post-header">
+                        <div class="post-avatar">E</div>
+                        <div class="post-info">
+                            <h3>Eunice Chuy</h3>
+                            <div class="post-date">
+                                ${new Date(post.date).toLocaleDateString('es-ES', { 
+                                    year: 'numeric', 
+                                    month: 'long', 
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post-message">${post.message}</div>
+
+                    ${post.image ? `<img src="${post.image}" alt="Publicación" class="post-image">` : ''}
+
+                    <div class="comments-section">
+                        <div class="comments-header">
+                            💬 Comentarios (${post.comments ? post.comments.length : 0})
+                        </div>
+
+                        ${post.comments && post.comments.length > 0 ? `
+                            <div class="comments-list">
+                                ${post.comments.map(comment => `
+                                    <div class="comment">
+                                        <div class="comment-author">${comment.name}</div>
+                                        <div class="comment-message">${comment.message}</div>
+                                        <div class="comment-date">
+                                            ${new Date(comment.date).toLocaleDateString('es-ES', { 
+                                                month: 'short', 
+                                                day: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            })}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : '<p style="color: #999; font-size: 14px; font-style: italic;">Sé la primera persona en comentar</p>'}
+
+                        <div class="comment-form">
+                            <h4>Deja tu comentario</h4>
+                            <form onsubmit="submitComment(event, ${post.id})">
+                                <div class="form-group">
+                                    <label>Tu nombre</label>
+                                    <input type="text" name="name" required placeholder="Ej: María García">
+                                </div>
+                                <div class="form-group">
+                                    <label>Tu comentario</label>
+                                    <textarea name="message" required placeholder="Escribe tu comentario aquí..."></textarea>
+                                </div>
+                                <button type="submit" class="btn-submit">Enviar comentario</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Enviar comentario
+        async function submitComment(event, postId) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const formData = new FormData(form);
+            const name = formData.get('name').trim();
+            const message = formData.get('message').trim();
+            
+            if (!name || !message) {
+                showNotification('Por favor completa todos los campos', 'error');
+                return;
+            }
+
+            const submitBtn = form.querySelector('.btn-submit');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+
+            try {
+                const response = await fetch(`${API_URL}/posts/${postId}/comments`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, message })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    showNotification('¡Comentario publicado! 🎉', 'success');
+                    form.reset();
+                    loadPosts(); // Recargar para mostrar el nuevo comentario
+                } else {
+                    showNotification('Error al publicar comentario', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error al publicar comentario', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Enviar comentario';
+            }
+        }
+
+        // Cargar publicaciones al iniciar
+        loadPosts();
+
+        // Recargar cada 30 segundos para ver nuevos comentarios
+        setInterval(loadPosts, 30000);
+    </script>
+</body>
+</html>

@@ -239,6 +239,200 @@ app.get('/api/pages', (req, res) => {
   }
 });
 
+// ============= PUBLICACIONES =============
+
+// Crear nueva publicación
+app.post('/api/posts', (req, res) => {
+  try {
+    const postsFile = path.join(__dirname, 'data', 'posts.json');
+    const postsDir = path.dirname(postsFile);
+    
+    if (!fs.existsSync(postsDir)) {
+      fs.mkdirSync(postsDir, { recursive: true });
+    }
+    
+    let posts = [];
+    if (fs.existsSync(postsFile)) {
+      const data = fs.readFileSync(postsFile, 'utf8');
+      posts = JSON.parse(data);
+    }
+    
+    const newPost = {
+      id: Date.now(),
+      message: req.body.message,
+      image: req.body.image || null,
+      date: new Date().toISOString(),
+      published: req.body.published !== false,
+      comments: []
+    };
+    
+    posts.unshift(newPost);
+    fs.writeFileSync(postsFile, JSON.stringify(posts, null, 2));
+    
+    res.json({ success: true, post: newPost });
+  } catch (error) {
+    console.error('Error al crear publicación:', error);
+    res.status(500).json({ error: 'Error al crear publicación' });
+  }
+});
+
+// Obtener todas las publicaciones
+app.get('/api/posts', (req, res) => {
+  try {
+    const postsFile = path.join(__dirname, 'data', 'posts.json');
+    
+    if (fs.existsSync(postsFile)) {
+      const data = fs.readFileSync(postsFile, 'utf8');
+      const posts = JSON.parse(data);
+      res.json({ posts: posts.filter(p => p.published) });
+    } else {
+      res.json({ posts: [] });
+    }
+  } catch (error) {
+    console.error('Error al obtener publicaciones:', error);
+    res.status(500).json({ error: 'Error al obtener publicaciones' });
+  }
+});
+
+// Obtener todas las publicaciones (admin - incluye borradores)
+app.get('/api/posts/all', (req, res) => {
+  try {
+    const postsFile = path.join(__dirname, 'data', 'posts.json');
+    
+    if (fs.existsSync(postsFile)) {
+      const data = fs.readFileSync(postsFile, 'utf8');
+      const posts = JSON.parse(data);
+      res.json({ posts: posts });
+    } else {
+      res.json({ posts: [] });
+    }
+  } catch (error) {
+    console.error('Error al obtener publicaciones:', error);
+    res.status(500).json({ error: 'Error al obtener publicaciones' });
+  }
+});
+
+// Actualizar publicación
+app.put('/api/posts/:id', (req, res) => {
+  try {
+    const postsFile = path.join(__dirname, 'data', 'posts.json');
+    
+    if (!fs.existsSync(postsFile)) {
+      return res.status(404).json({ error: 'No se encontraron publicaciones' });
+    }
+    
+    const data = fs.readFileSync(postsFile, 'utf8');
+    let posts = JSON.parse(data);
+    
+    const postIndex = posts.findIndex(p => p.id == req.params.id);
+    if (postIndex === -1) {
+      return res.status(404).json({ error: 'Publicación no encontrada' });
+    }
+    
+    posts[postIndex] = { ...posts[postIndex], ...req.body };
+    fs.writeFileSync(postsFile, JSON.stringify(posts, null, 2));
+    
+    res.json({ success: true, post: posts[postIndex] });
+  } catch (error) {
+    console.error('Error al actualizar publicación:', error);
+    res.status(500).json({ error: 'Error al actualizar publicación' });
+  }
+});
+
+// Eliminar publicación
+app.delete('/api/posts/:id', (req, res) => {
+  try {
+    const postsFile = path.join(__dirname, 'data', 'posts.json');
+    
+    if (!fs.existsSync(postsFile)) {
+      return res.status(404).json({ error: 'No se encontraron publicaciones' });
+    }
+    
+    const data = fs.readFileSync(postsFile, 'utf8');
+    let posts = JSON.parse(data);
+    
+    posts = posts.filter(p => p.id != req.params.id);
+    fs.writeFileSync(postsFile, JSON.stringify(posts, null, 2));
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error al eliminar publicación:', error);
+    res.status(500).json({ error: 'Error al eliminar publicación' });
+  }
+});
+
+// ============= COMENTARIOS =============
+
+// Agregar comentario a una publicación
+app.post('/api/posts/:id/comments', (req, res) => {
+  try {
+    const postsFile = path.join(__dirname, 'data', 'posts.json');
+    
+    if (!fs.existsSync(postsFile)) {
+      return res.status(404).json({ error: 'No se encontraron publicaciones' });
+    }
+    
+    const data = fs.readFileSync(postsFile, 'utf8');
+    let posts = JSON.parse(data);
+    
+    const postIndex = posts.findIndex(p => p.id == req.params.id);
+    if (postIndex === -1) {
+      return res.status(404).json({ error: 'Publicación no encontrada' });
+    }
+    
+    const newComment = {
+      id: Date.now(),
+      name: req.body.name,
+      message: req.body.message,
+      date: new Date().toISOString()
+    };
+    
+    if (!posts[postIndex].comments) {
+      posts[postIndex].comments = [];
+    }
+    
+    posts[postIndex].comments.push(newComment);
+    fs.writeFileSync(postsFile, JSON.stringify(posts, null, 2));
+    
+    res.json({ success: true, comment: newComment });
+  } catch (error) {
+    console.error('Error al agregar comentario:', error);
+    res.status(500).json({ error: 'Error al agregar comentario' });
+  }
+});
+
+// Eliminar comentario (admin)
+app.delete('/api/posts/:postId/comments/:commentId', (req, res) => {
+  try {
+    const postsFile = path.join(__dirname, 'data', 'posts.json');
+    
+    if (!fs.existsSync(postsFile)) {
+      return res.status(404).json({ error: 'No se encontraron publicaciones' });
+    }
+    
+    const data = fs.readFileSync(postsFile, 'utf8');
+    let posts = JSON.parse(data);
+    
+    const postIndex = posts.findIndex(p => p.id == req.params.postId);
+    if (postIndex === -1) {
+      return res.status(404).json({ error: 'Publicación no encontrada' });
+    }
+    
+    if (posts[postIndex].comments) {
+      posts[postIndex].comments = posts[postIndex].comments.filter(
+        c => c.id != req.params.commentId
+      );
+    }
+    
+    fs.writeFileSync(postsFile, JSON.stringify(posts, null, 2));
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error al eliminar comentario:', error);
+    res.status(500).json({ error: 'Error al eliminar comentario' });
+  }
+});
+
 // Endpoint de mariposas
 app.get('/butterflies', (req, res) => {
   const butterflies = [
