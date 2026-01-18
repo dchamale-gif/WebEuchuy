@@ -259,8 +259,10 @@ app.post('/api/posts', (req, res) => {
     
     const newPost = {
       id: Date.now(),
-      message: req.body.message,
+      title: req.body.title,
+      content: req.body.content,
       image: req.body.image || null,
+      category: req.body.category || 'general',
       date: new Date().toISOString(),
       published: req.body.published !== false,
       comments: []

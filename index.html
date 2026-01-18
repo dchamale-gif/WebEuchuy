@@ -85,19 +85,19 @@
           <p class="blog-description">Comparto tips, tendencias y secretos del mundo del contenido digital</p>
           
           <div class="blog-cards">
-            <a href="estrategias-contenido.html" class="blog-card">
+            <a href="publicaciones.html?category=estrategias-contenido" class="blog-card" data-category="estrategias-contenido">
               <div class="blog-icon">📝</div>
               <h3>Estrategias de Contenido</h3>
               <p>Descubre cómo crear contenido que conecte</p>
             </a>
             
-            <a href="fotografia-creativa.html" class="blog-card">
+            <a href="publicaciones.html?category=fotografia-creativa" class="blog-card" data-category="fotografia-creativa">
               <div class="blog-icon">📸</div>
               <h3>Fotografía Creativa</h3>
               <p>Tips para capturar momentos únicos</p>
             </a>
             
-            <a href="video-marketing.html" class="blog-card">
+            <a href="publicaciones.html?category=video-marketing" class="blog-card" data-category="video-marketing">
               <div class="blog-icon">🎬</div>
               <h3>Video Marketing</h3>
               <p>Tendencias en contenido audiovisual</p>
@@ -196,5 +196,58 @@
   <!-- EmailJS CDN -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script src="scripts/main.js?v=2024110312"></script>
+  
+  <!-- Cargar últimas publicaciones en blog -->
+  <script>
+    async function loadBlogPosts() {
+      try {
+        const response = await fetch('http://localhost:5003/api/posts');
+        const data = await response.json();
+        const posts = data.posts || [];
+        
+        // Agrupar por categoría y obtener la más reciente de cada una
+        const categories = {
+          'estrategias-contenido': posts.filter(p => p.category === 'estrategias-contenido')[0],
+          'fotografia-creativa': posts.filter(p => p.category === 'fotografia-creativa')[0],
+          'video-marketing': posts.filter(p => p.category === 'video-marketing')[0]
+        };
+        
+        // Actualizar tarjetas con contenido dinámico
+        const blogCards = document.querySelectorAll('.blog-card');
+        
+        if (categories['estrategias-contenido'] && blogCards[0]) {
+          blogCards[0].querySelector('h3').textContent = categories['estrategias-contenido'].title;
+          blogCards[0].querySelector('p').textContent = 
+            categories['estrategias-contenido'].content.substring(0, 80) + '...';
+        }
+        
+        if (categories['fotografia-creativa'] && blogCards[1]) {
+          blogCards[1].querySelector('h3').textContent = categories['fotografia-creativa'].title;
+          blogCards[1].querySelector('p').textContent = 
+            categories['fotografia-creativa'].content.substring(0, 80) + '...';
+        }
+        
+        if (categories['video-marketing'] && blogCards[2]) {
+          blogCards[2].querySelector('h3').textContent = categories['video-marketing'].title;
+          blogCards[2].querySelector('p').textContent = 
+            categories['video-marketing'].content.substring(0, 80) + '...';
+        }
+        
+        // Actualizar CTA
+        const totalPosts = posts.length;
+        if (totalPosts > 0) {
+          document.querySelector('.coming-soon').innerHTML = 
+            `<a href="publicaciones.html" style="color: #667eea; font-weight: 600; text-decoration: none;">
+              Ver todas las publicaciones (${totalPosts}) →
+            </a>`;
+        }
+      } catch (error) {
+        console.log('No se pudieron cargar las publicaciones del blog:', error);
+      }
+    }
+    
+    // Cargar al iniciar
+    window.addEventListener('load', loadBlogPosts);
+  </script>
 </body>
 </html>

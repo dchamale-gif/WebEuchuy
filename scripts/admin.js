@@ -566,13 +566,29 @@ function displayPosts(posts) {
         return;
     }
     
+    const categoryLabels = {
+        'estrategias-contenido': '📝 Estrategias de Contenido',
+        'fotografia-creativa': '📸 Fotografía Creativa',
+        'video-marketing': '🎬 Video Marketing',
+        'general': '✨ General'
+    };
+    
     container.innerHTML = `
         <div style="display: flex; flex-direction: column; gap: 20px;">
             ${posts.map(post => `
                 <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                     <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
                         <div style="flex: 1;">
-                            <p style="color: #666; font-size: 12px; margin-bottom: 8px;">
+                            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
+                                <span style="padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; background: #e0e7ff; color: #4338ca;">
+                                    ${categoryLabels[post.category] || '✨ General'}
+                                </span>
+                                <span style="padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; ${post.published ? 'background: #d1fae5; color: #065f46;' : 'background: #fee; color: #991b1b;'}">
+                                    ${post.published ? '✓ Publicado' : '✗ Borrador'}
+                                </span>
+                            </div>
+                            <h3 style="font-size: 20px; font-weight: 700; color: #333; margin-bottom: 8px;">${post.title || 'Sin título'}</h3>
+                            <p style="color: #666; font-size: 12px; margin-bottom: 12px;">
                                 📅 ${new Date(post.date).toLocaleDateString('es-ES', { 
                                     year: 'numeric', 
                                     month: 'long', 
@@ -581,16 +597,13 @@ function displayPosts(posts) {
                                     minute: '2-digit'
                                 })}
                             </p>
-                            <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">${post.message}</p>
+                            <p style="color: #555; font-size: 15px; line-height: 1.6; margin-bottom: 15px;">${post.content ? post.content.substring(0, 150) + (post.content.length > 150 ? '...' : '') : 'Sin contenido'}</p>
                         </div>
-                        <span style="padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-left: 15px; ${post.published ? 'background: #d1fae5; color: #065f46;' : 'background: #fee; color: #991b1b;'}">
-                            ${post.published ? '✓ Publicado' : '✗ Borrador'}
-                        </span>
                     </div>
                     
                     ${post.image ? `
                         <div style="margin-bottom: 15px;">
-                            <img src="${post.image}" alt="Imagen de publicación" 
+                            <img src="${post.image}" alt="${post.title || 'Imagen de publicación'}" 
                                  style="width: 100%; max-width: 400px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                         </div>
                     ` : ''}
@@ -645,47 +658,158 @@ function displayPosts(posts) {
     `;
 }
 
-async function createPost() {
-    const message = prompt('Escribe tu mensaje (ej: "Hoy hice unas tomas hermosas en Cayalá, esperen mi video en mis redes 📸"):');
-    if (!message || message.trim() === '') return;
+function createPost() {
+    // Crear modal con formulario
+    const modal = document.createElement('div');
+    modal.id = 'post-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        padding: 20px;
+    `;
     
-    const addImage = confirm('¿Quieres agregar una imagen a esta publicación?');
-    let imageUrl = null;
+    const images = getImages();
+    const imageOptions = images.map((img, idx) => 
+        `<option value="${img.url}">${img.name}</option>`
+    ).join('');
     
-    if (addImage) {
-        const images = getImages();
-        if (images.length === 0) {
-            alert('Primero debes subir imágenes en la sección de Imágenes');
+    modal.innerHTML = `
+        <div style="background: white; border-radius: 20px; padding: 30px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+            <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 25px; color: #333;">
+                ✨ Nueva Publicación
+            </h2>
+            
+            <form id="post-form">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555; font-size: 14px;">
+                        📝 Título *
+                    </label>
+                    <input type="text" id="post-title" required 
+                           placeholder="Ej: Sesión de fotos en Cayalá"
+                           style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555; font-size: 14px;">
+                        🏷️ Categoría *
+                    </label>
+                    <select id="post-category" required
+                            style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                        <option value="">Selecciona una categoría</option>
+                        <option value="estrategias-contenido">📝 Estrategias de Contenido</option>
+                        <option value="fotografia-creativa">📸 Fotografía Creativa</option>
+                        <option value="video-marketing">🎬 Video Marketing</option>
+                        <option value="general">✨ General</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555; font-size: 14px;">
+                        📄 Contenido *
+                    </label>
+                    <textarea id="post-content" required rows="6"
+                              placeholder="Escribe el contenido completo de tu publicación..."
+                              style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical;"></textarea>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555; font-size: 14px;">
+                        📸 Imagen (opcional)
+                    </label>
+                    ${images.length > 0 ? `
+                        <select id="post-image"
+                                style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                            <option value="">Sin imagen</option>
+                            ${imageOptions}
+                        </select>
+                        <p style="font-size: 12px; color: #999; margin-top: 6px;">
+                            Si no ves tu imagen, súbela primero en la pestaña "Imágenes"
+                        </p>
+                    ` : `
+                        <p style="color: #999; font-size: 13px; font-style: italic;">
+                            No hay imágenes disponibles. Sube imágenes en la pestaña "Imágenes" primero.
+                        </p>
+                    `}
+                </div>
+                
+                <div style="margin-bottom: 25px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" id="post-published" checked
+                               style="width: 18px; height: 18px; cursor: pointer;">
+                        <span style="font-weight: 600; color: #555; font-size: 14px;">
+                            📤 Publicar inmediatamente
+                        </span>
+                    </label>
+                    <p style="font-size: 12px; color: #999; margin-top: 4px; margin-left: 28px;">
+                        Si no marcas esta opción, se guardará como borrador
+                    </p>
+                </div>
+                
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" onclick="closePostModal()"
+                            style="padding: 12px 24px; background: #6c757d; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px;">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                            style="padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px;">
+                        Crear Publicación
+                    </button>
+                </div>
+            </form>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Manejar envío del formulario
+    document.getElementById('post-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const title = document.getElementById('post-title').value.trim();
+        const category = document.getElementById('post-category').value;
+        const content = document.getElementById('post-content').value.trim();
+        const imageSelect = document.getElementById('post-image');
+        const image = imageSelect ? imageSelect.value : null;
+        const published = document.getElementById('post-published').checked;
+        
+        if (!title || !category || !content) {
+            alert('Por favor completa todos los campos obligatorios');
             return;
         }
         
-        // Mostrar selector de imágenes
-        const imageList = images.map((img, index) => `${index + 1}. ${img.name}`).join('\n');
-        const imageIndex = prompt(`Selecciona una imagen (1-${images.length}):\n${imageList}`);
-        
-        if (imageIndex && parseInt(imageIndex) > 0 && parseInt(imageIndex) <= images.length) {
-            imageUrl = images[parseInt(imageIndex) - 1].url;
+        try {
+            const response = await fetch('http://localhost:5003/api/posts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, category, content, image, published })
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                showNotification(published ? 'Publicación creada y publicada' : 'Publicación guardada como borrador', 'success');
+                closePostModal();
+                loadPosts();
+                updateStats();
+            }
+        } catch (error) {
+            showNotification('Error al crear publicación', 'error');
+            console.error(error);
         }
-    }
-    
-    const published = confirm('¿Publicar inmediatamente? (Cancelar = Guardar como borrador)');
-    
-    try {
-        const response = await fetch('http://localhost:5003/api/posts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message, image: imageUrl, published })
-        });
-        
-        const data = await response.json();
-        if (data.success) {
-            showNotification(published ? 'Publicación creada y publicada' : 'Publicación guardada como borrador', 'success');
-            loadPosts();
-            updateStats();
-        }
-    } catch (error) {
-        showNotification('Error al crear publicación', 'error');
-        console.error(error);
+    });
+}
+
+function closePostModal() {
+    const modal = document.getElementById('post-modal');
+    if (modal) {
+        modal.remove();
     }
 }
 
@@ -700,20 +824,128 @@ async function editPost(postId) {
             return;
         }
         
-        const newMessage = prompt('Editar mensaje:', post.message);
-        if (newMessage === null) return;
+        // Crear modal con formulario prellenado
+        const modal = document.createElement('div');
+        modal.id = 'post-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        `;
         
-        const updateResponse = await fetch(`http://localhost:5003/api/posts/${postId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: newMessage })
+        const images = getImages();
+        const imageOptions = images.map((img, idx) => 
+            `<option value="${img.url}" ${img.url === post.image ? 'selected' : ''}>${img.name}</option>`
+        ).join('');
+        
+        modal.innerHTML = `
+            <div style="background: white; border-radius: 20px; padding: 30px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 25px; color: #333;">
+                    ✏️ Editar Publicación
+                </h2>
+                
+                <form id="edit-post-form">
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555; font-size: 14px;">
+                            📝 Título *
+                        </label>
+                        <input type="text" id="edit-post-title" required value="${(post.title || '').replace(/"/g, '&quot;')}"
+                               placeholder="Ej: Sesión de fotos en Cayalá"
+                               style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555; font-size: 14px;">
+                            🏷️ Categoría *
+                        </label>
+                        <select id="edit-post-category" required
+                                style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                            <option value="">Selecciona una categoría</option>
+                            <option value="estrategias-contenido" ${post.category === 'estrategias-contenido' ? 'selected' : ''}>📝 Estrategias de Contenido</option>
+                            <option value="fotografia-creativa" ${post.category === 'fotografia-creativa' ? 'selected' : ''}>📸 Fotografía Creativa</option>
+                            <option value="video-marketing" ${post.category === 'video-marketing' ? 'selected' : ''}>🎬 Video Marketing</option>
+                            <option value="general" ${post.category === 'general' ? 'selected' : ''}>✨ General</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555; font-size: 14px;">
+                            📄 Contenido *
+                        </label>
+                        <textarea id="edit-post-content" required rows="6"
+                                  placeholder="Escribe el contenido completo de tu publicación..."
+                                  style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px; resize: vertical;">${(post.content || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555; font-size: 14px;">
+                            📸 Imagen (opcional)
+                        </label>
+                        ${images.length > 0 ? `
+                            <select id="edit-post-image"
+                                    style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                                <option value="">Sin imagen</option>
+                                ${imageOptions}
+                            </select>
+                        ` : `
+                            <p style="color: #999; font-size: 13px; font-style: italic;">
+                                No hay imágenes disponibles. Sube imágenes en la pestaña "Imágenes" primero.
+                            </p>
+                        `}
+                    </div>
+                    
+                    <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 25px;">
+                        <button type="button" onclick="closePostModal()"
+                                style="padding: 12px 24px; background: #6c757d; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px;">
+                            Cancelar
+                        </button>
+                        <button type="submit"
+                                style="padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px;">
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Manejar envío del formulario
+        document.getElementById('edit-post-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('edit-post-title').value.trim();
+            const category = document.getElementById('edit-post-category').value;
+            const content = document.getElementById('edit-post-content').value.trim();
+            const imageSelect = document.getElementById('edit-post-image');
+            const image = imageSelect ? imageSelect.value : post.image;
+            
+            if (!title || !category || !content) {
+                alert('Por favor completa todos los campos obligatorios');
+                return;
+            }
+            
+            const updateResponse = await fetch(`http://localhost:5003/api/posts/${postId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, category, content, image })
+            });
+            
+            const updateData = await updateResponse.json();
+            if (updateData.success) {
+                showNotification('Publicación actualizada', 'success');
+                closePostModal();
+                loadPosts();
+            }
         });
-        
-        const updateData = await updateResponse.json();
-        if (updateData.success) {
-            showNotification('Publicación actualizada', 'success');
-            loadPosts();
-        }
     } catch (error) {
         showNotification('Error al editar publicación', 'error');
         console.error(error);

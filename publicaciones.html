@@ -327,6 +327,24 @@
     <script>
         const API_URL = 'http://localhost:5003/api';
 
+        // Obtener categoría de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const filterCategory = urlParams.get('category');
+        
+        // Actualizar título si hay filtro
+        if (filterCategory) {
+            const categoryNames = {
+                'estrategias-contenido': '📝 Estrategias de Contenido',
+                'fotografia-creativa': '📸 Fotografía Creativa',
+                'video-marketing': '🎬 Video Marketing'
+            };
+            const categoryName = categoryNames[filterCategory];
+            if (categoryName) {
+                document.querySelector('.header h1').textContent = categoryName;
+                document.querySelector('.header p').textContent = 'Todas mis publicaciones sobre ' + categoryName.split(' ').slice(1).join(' ').toLowerCase();
+            }
+        }
+
         // Mostrar notificación
         function showNotification(message, type = 'success') {
             const notification = document.getElementById('notification');
@@ -344,7 +362,14 @@
             try {
                 const response = await fetch(`${API_URL}/posts`);
                 const data = await response.json();
-                displayPosts(data.posts || []);
+                let posts = data.posts || [];
+                
+                // Filtrar por categoría si existe
+                if (filterCategory) {
+                    posts = posts.filter(p => p.category === filterCategory);
+                }
+                
+                displayPosts(posts);
             } catch (error) {
                 console.error('Error al cargar publicaciones:', error);
                 document.getElementById('posts-container').innerHTML = `
@@ -370,6 +395,13 @@
                 return;
             }
 
+            const categoryLabels = {
+                'estrategias-contenido': '📝 Estrategias de Contenido',
+                'fotografia-creativa': '📸 Fotografía Creativa',
+                'video-marketing': '🎬 Video Marketing',
+                'general': '✨ General'
+            };
+
             container.innerHTML = posts.map(post => `
                 <div class="post">
                     <div class="post-header">
@@ -384,13 +416,20 @@
                                     hour: '2-digit',
                                     minute: '2-digit'
                                 })}
+                                <span style="margin-left: 10px; padding: 4px 10px; background: #e0e7ff; color: #4338ca; border-radius: 12px; font-size: 11px; font-weight: 600;">
+                                    ${categoryLabels[post.category] || '✨ General'}
+                                </span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="post-message">${post.message}</div>
+                    <h2 style="font-size: 22px; font-weight: 700; color: #333; margin-bottom: 15px;">
+                        ${post.title || 'Sin título'}
+                    </h2>
 
-                    ${post.image ? `<img src="${post.image}" alt="Publicación" class="post-image">` : ''}
+                    <div class="post-message">${post.content || post.message || ''}</div>
+
+                    ${post.image ? `<img src="${post.image}" alt="${post.title || 'Publicación'}" class="post-image">` : ''}
 
                     <div class="comments-section">
                         <div class="comments-header">
