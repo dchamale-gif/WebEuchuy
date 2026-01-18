@@ -252,7 +252,7 @@ function uploadImage() {
 // Cargar imágenes desde el servidor
 async function loadImagesFromServer() {
     try {
-        const response = await fetch('/api/images');
+        const response = await fetch('http://localhost:5003/api/images');
         if (response.ok) {
             const result = await response.json();
             
@@ -724,20 +724,32 @@ function createPost() {
                     <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555; font-size: 14px;">
                         📸 Imagen (opcional)
                     </label>
+                    
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <input type="file" id="post-image-upload" accept="image/*"
+                               style="flex: 1; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 13px;">
+                        <button type="button" onclick="uploadImageForPost()"
+                                style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; white-space: nowrap;">
+                            ⬆️ Subir
+                        </button>
+                    </div>
+                    
                     ${images.length > 0 ? `
                         <select id="post-image"
                                 style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
-                            <option value="">Sin imagen</option>
+                            <option value="">O selecciona una imagen ya subida</option>
                             ${imageOptions}
                         </select>
-                        <p style="font-size: 12px; color: #999; margin-top: 6px;">
-                            Si no ves tu imagen, súbela primero en la pestaña "Imágenes"
-                        </p>
                     ` : `
-                        <p style="color: #999; font-size: 13px; font-style: italic;">
-                            No hay imágenes disponibles. Sube imágenes en la pestaña "Imágenes" primero.
+                        <p style="color: #999; font-size: 12px; margin-top: 6px; font-style: italic;">
+                            No tienes imágenes previas. Sube una nueva arriba.
                         </p>
                     `}
+                    
+                    <div id="upload-preview" style="margin-top: 10px; display: none;">
+                        <img id="preview-image" src="" alt="Preview" 
+                             style="max-width: 200px; max-height: 200px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    </div>
                 </div>
                 
                 <div style="margin-bottom: 25px;">
@@ -804,6 +816,90 @@ function createPost() {
             console.error(error);
         }
     });
+}
+
+// Función para subir imagen desde el formulario de publicación
+async function uploadImageForPost() {
+    const fileInput = document.getElementById('post-image-upload');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        alert('Por favor selecciona una imagen primero');
+        return;
+    }
+    
+    // Validar que sea una imagen
+    if (!file.type.startsWith('image/')) {
+        alert('Por favor selecciona un archivo de imagen válido');
+        return;
+    }
+    
+    // Validar tamaño (máximo 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+        alert('La imagen es demasiado grande. Máximo 10MB');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    try {
+        const button = event.target;
+        button.disabled = true;
+        button.textContent = 'Subiendo...';
+        
+        const response = await fetch('http://localhost:5003/api/upload-image', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Mostrar preview
+            const preview = document.getElementById('upload-preview');
+            const previewImg = document.getElementById('preview-image');
+            previewImg.src = data.image.url;
+            preview.style.display = 'block';
+            
+            // Actualizar el select con la nueva imagen
+            const select = document.getElementById('post-image');
+            if (select) {
+                const option = document.createElement('option');
+                option.value = data.image.url;
+                option.textContent = data.image.name;
+                option.selected = true;
+                select.appendChild(option);
+            } else {
+                // Si no hay select, crear uno
+                const imageSection = document.getElementById('post-image-upload').parentElement.parentElement;
+                const newSelect = document.createElement('select');
+                newSelect.id = 'post-image';
+                newSelect.style.cssText = 'width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: "Montserrat", sans-serif; font-size: 14px; margin-top: 10px;';
+                newSelect.innerHTML = `
+                    <option value="">Sin imagen</option>
+                    <option value="${data.image.url}" selected>${data.image.name}</option>
+                `;
+                imageSection.appendChild(newSelect);
+            }
+            
+            showNotification('Imagen subida correctamente', 'success');
+            
+            // Actualizar lista de imágenes en localStorage
+            const images = getImages();
+            images.unshift(data.image);
+            saveImages(images);
+        } else {
+            alert('Error al subir imagen: ' + (data.error || 'Error desconocido'));
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al subir la imagen');
+    } finally {
+        const button = event.target;
+        button.disabled = false;
+        button.textContent = '⬆️ Subir';
+    }
 }
 
 function closePostModal() {
@@ -889,6 +985,16 @@ async function editPost(postId) {
                         <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555; font-size: 14px;">
                             📸 Imagen (opcional)
                         </label>
+                        
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <input type="file" id="edit-post-image-upload" accept="image/*"
+                                   style="flex: 1; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 13px;">
+                            <button type="button" onclick="uploadImageForEditPost()"
+                                    style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; white-space: nowrap;">
+                                ⬆️ Subir
+                            </button>
+                        </div>
+                        
                         ${images.length > 0 ? `
                             <select id="edit-post-image"
                                     style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
@@ -896,10 +1002,15 @@ async function editPost(postId) {
                                 ${imageOptions}
                             </select>
                         ` : `
-                            <p style="color: #999; font-size: 13px; font-style: italic;">
-                                No hay imágenes disponibles. Sube imágenes en la pestaña "Imágenes" primero.
+                            <p style="color: #999; font-size: 12px; margin-top: 6px; font-style: italic;">
+                                No tienes imágenes previas. Sube una nueva arriba.
                             </p>
                         `}
+                        
+                        <div id="edit-upload-preview" style="margin-top: 10px; display: ${post.image ? 'block' : 'none'};">
+                            <img id="edit-preview-image" src="${post.image || ''}" alt="Preview" 
+                                 style="max-width: 200px; max-height: 200px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        </div>
                     </div>
                     
                     <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 25px;">
@@ -949,6 +1060,86 @@ async function editPost(postId) {
     } catch (error) {
         showNotification('Error al editar publicación', 'error');
         console.error(error);
+    }
+}
+
+// Función para subir imagen en modo edición
+async function uploadImageForEditPost() {
+    const fileInput = document.getElementById('edit-post-image-upload');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        alert('Por favor selecciona una imagen primero');
+        return;
+    }
+    
+    if (!file.type.startsWith('image/')) {
+        alert('Por favor selecciona un archivo de imagen válido');
+        return;
+    }
+    
+    if (file.size > 10 * 1024 * 1024) {
+        alert('La imagen es demasiado grande. Máximo 10MB');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    try {
+        const button = event.target;
+        button.disabled = true;
+        button.textContent = 'Subiendo...';
+        
+        const response = await fetch('http://localhost:5003/api/upload-image', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Mostrar preview
+            const preview = document.getElementById('edit-upload-preview');
+            const previewImg = document.getElementById('edit-preview-image');
+            previewImg.src = data.image.url;
+            preview.style.display = 'block';
+            
+            // Actualizar el select
+            const select = document.getElementById('edit-post-image');
+            if (select) {
+                const option = document.createElement('option');
+                option.value = data.image.url;
+                option.textContent = data.image.name;
+                option.selected = true;
+                select.appendChild(option);
+            } else {
+                const imageSection = document.getElementById('edit-post-image-upload').parentElement.parentElement;
+                const newSelect = document.createElement('select');
+                newSelect.id = 'edit-post-image';
+                newSelect.style.cssText = 'width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: "Montserrat", sans-serif; font-size: 14px; margin-top: 10px;';
+                newSelect.innerHTML = `
+                    <option value="">Sin imagen</option>
+                    <option value="${data.image.url}" selected>${data.image.name}</option>
+                `;
+                imageSection.appendChild(newSelect);
+            }
+            
+            showNotification('Imagen subida correctamente', 'success');
+            
+            const images = getImages();
+            images.unshift(data.image);
+            saveImages(images);
+        } else {
+            alert('Error al subir imagen: ' + (data.error || 'Error desconocido'));
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al subir la imagen');
+    } finally {
+        const button = event.target;
+        button.disabled = false;
+        button.textContent = '⬆️ Subir';
     }
 }
 
